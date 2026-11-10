@@ -260,6 +260,11 @@ section { padding-block: 96px 0; scroll-margin-top: 80px; }
 .cronica li.menor .nota-version { padding: 12px 18px; background: transparent; border-style: dashed; }
 .cronica li.menor h3 { font-weight: 800; font-size: 15px; color: var(--pergamino); }
 .cronica li.menor p { font-size: 14.5px; }
+.anteriores { margin-top: 14px; }
+.anteriores-dentro { padding: 4px 22px 22px; }
+.anteriores .nota-version p { padding: 0; }
+.anteriores .cronica li:first-child .nota-version { border-color: var(--borde-suave); background: var(--cristal); }
+@media (max-width: 640px) { .anteriores-dentro { padding: 4px 14px 16px; } }
 .mas-notas { margin-top: 18px; color: var(--suave); font-size: 15px; }
 @media (max-width: 640px) {
   .cronica::before { left: 6px; }
@@ -332,11 +337,11 @@ footer p { color: var(--suave); font-size: 13.5px; max-width: 90ch; }
   <div class="col">
     <a class="marca" href="#inicio"><img src="assets/logo.png" alt="" width="40" height="40"><span>Nuevo Mundo</span></a>
     <nav class="menu" aria-label="Secciones">
+      <a href="#proxima">0.9.4</a>
+      <a href="#noticias"><span lang="es">Noticias</span><span lang="en">News</span></a>
       <a href="#mundo"><span lang="es">El mundo</span><span lang="en">The world</span></a>
       <a href="#caminos"><span lang="es">Caminos</span><span lang="en">Paths</span></a>
       <a href="#que-hay"><span lang="es">Qué hay</span><span lang="en">Features</span></a>
-      <a href="#proxima">0.9.4</a>
-      <a href="#noticias"><span lang="es">Noticias</span><span lang="en">News</span></a>
       <a href="#galeria"><span lang="es">Galería</span><span lang="en">Gallery</span></a>
       <a href="#instalar"><span lang="es">Instalar</span><span lang="en">Install</span></a>
     </nav>
@@ -404,6 +409,114 @@ footer p { color: var(--suave); font-size: 13.5px; max-width: 90ch; }
       <div class="cifra"><b class="oro-texto">10</b><span lang="es">rangos en la Marina</span><span lang="en">Marine ranks</span></div>
     </div>
   </div>
+
+  <section id="proxima" class="gutter">
+    <div class="col">
+      <div class="proxima">
+        <div>
+          <a class="pastilla viva" href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018?tab=files" target="_blank" rel="noopener"><span lang="es">Ya disponible</span><span lang="en">Out now</span></a>
+          <h2 class="titulo-sec oro-texto" style="margin-top:16px"><span lang="es">Novedades de la 0.9.4</span><span lang="en">New in 0.9.4</span></h2>
+          <div class="teclas" aria-hidden="true">
+            <div class="tecla">B<small lang="es">distancia</small><small lang="en">ranged</small></div>
+            <div class="tecla">N<small lang="es">área</small><small lang="en">area</small></div>
+            <div class="tecla">M<small lang="es">poder</small><small lang="en">power</small></div>
+          </div>
+          <p class="nota" lang="es" style="margin-top:34px">¿Ya tienes la 0.9.3? Baja solo el «0.9.4 update» en Nexus y descomprímelo encima del mod. Tus partidas siguen valiendo.</p>
+          <p class="nota" lang="en" style="margin-top:34px">Already on 0.9.3? Just grab the "0.9.4 update" on Nexus and unzip it over the mod. Your saves keep working.</p>
+        </div>
+        <ul class="lista-proxima">
+          <li><span class="ico">✦</span><span><span lang="es"><b>Tres técnicas por fruta y por estilo</b><span>Con modelos propios: cortes que vuelan, rayos del cielo, ondas, cúpulas y púas.</span></span><span lang="en"><b>Three techniques per fruit and style</b><span>With the mod's own models: flying slashes, lightning from the sky, waves, domes and spikes.</span></span></span></li>
+          <li><span class="ico">🌊</span><span><span lang="es"><b>Reyes Marinos salvajes</b><span>Batallas navales contra ellos en tres tamaños, y puedes salir a pescarlos.</span></span><span lang="en"><b>Wild Sea Kings</b><span>Naval battles against them in three sizes, and you can go fishing for them.</span></span></span></li>
+          <li><span class="ico">🍺</span><span><span lang="es"><b>Aspirantes a nakama</b><span>La gente de las tabernas, con su oficio, su mar y su sueño.</span></span><span lang="en"><b>Would-be nakama</b><span>Tavern folk with their own crew role, home sea and dream.</span></span></span></li>
+          <li><span class="ico">🧪</span><span><span lang="es"><b>Egghead, Lulusia y mapas del tesoro</b><span>Sucesos del canon en tus partidas nuevas, y tesoros que se cavan de verdad.</span></span><span lang="en"><b>Egghead, Lulusia and treasure maps</b><span>Canon events in your new games, and treasure you actually dig up.</span></span></span></li>
+          <li><span class="ico">⛵</span><span><span lang="es"><b>Barcos con diseño propio</b><span>En las batallas navales: 10 cascos en tres estilos, el tuyo, el de la Marina y el de los piratas.</span></span><span lang="en"><b>Ships with the mod's own designs</b><span>In naval battles: 10 hulls in three styles, yours, the Marines' and the pirates'.</span></span></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="noticias" class="gutter">
+    <div class="col">
+      <div class="cabeza">
+        <span class="ceja"><span lang="es">Diario de a bordo</span><span lang="en">Ship's log</span></span>
+        <h2 class="titulo-sec oro-texto"><span lang="es">Noticias</span><span lang="en">News</span></h2>
+        <p class="entradilla" lang="es">Todas las versiones de la beta, de la más nueva a la primera. Las partidas siguen valiendo de una a otra.</p>
+        <p class="entradilla" lang="en">Every beta release, newest first. Your saves carry over from one to the next.</p>
+      </div>
+      <div class="canales">
+        <a href="https://discord.gg/eHTTNDrh8d" target="_blank" rel="noopener">Discord <small><span lang="es">sale aquí primero</span><span lang="en">first to know</span></small></a>
+        <a href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018?tab=logs" target="_blank" rel="noopener">Nexus Mods <small><span lang="es">notas completas</span><span lang="en">full patch notes</span></small></a>
+        <a href="https://www.moddb.com/mods/one-piece-nuevo-mundo" target="_blank" rel="noopener">ModDB</a>
+      </div>
+      <ol class="cronica">
+        <li>
+          <time><span lang="es">10 nov</span><span lang="en">Nov 10</span></time>
+          <article class="nota-version">
+            <h3><b>0.9.4</b><span class="nombre-v"><span lang="es">«La isla del futuro»</span><span lang="en">"The Island of the Future"</span></span><span class="nueva"><span lang="es">La última</span><span lang="en">Latest</span></span></h3>
+            <p lang="es">Tres técnicas por fruta y por estilo (B, N y M) con modelos propios, Reyes Marinos salvajes, aspirantes a nakama en las tabernas, Lulusia y el incidente de Egghead, la bitácora del capitán, mapas del tesoro de verdad, barcos con diseño propio y un cartel que cuesta más subir.</p>
+            <p lang="en">Three techniques per fruit and per style (B, N and M) with the mod's own models, wild Sea Kings, would-be nakama in the taverns, Lulusia and the Egghead Incident, the Captain's Log, real treasure maps, ships with the mod's own designs and a bounty that is harder to raise.</p>
+          </article>
+        </li>
+        <li class="menor">
+          <time><span lang="es">4 nov</span><span lang="en">Nov 4</span></time>
+          <article class="nota-version">
+            <h3>0.9.3 · hotfix 1</h3>
+            <p lang="es">Arregla un cierre al hablar con algunos vagabundos, otro al despedir a ciertos compañeros y los retratos que se acumulaban en memoria en partidas largas. Ya va dentro de la 0.9.4.</p>
+            <p lang="en">Fixes a crash when talking to some tavern wanderers, another when dismissing certain companions, and portraits piling up in memory over long sessions. Already inside 0.9.4.</p>
+          </article>
+        </li>
+        <li>
+          <time><span lang="es">3 nov</span><span lang="en">Nov 3</span></time>
+          <article class="nota-version">
+            <h3><b>0.9.3</b><span class="nombre-v"><span lang="es">«Bajo su bandera»</span><span lang="en">"Under Their Flag"</span></span></h3>
+            <p lang="es">Las tripulaciones sin islas cobran tributo a las aldeas (y tú también puedes), domadores de Reyes Marinos por los mares, tropas propias para el Ejército Revolucionario, el Haki de armadura se ve en la batalla y un informe de fallos que se manda con un botón.</p>
+            <p lang="en">Crews without islands make villages pay tribute (and so can you), Sea King tamers roam the seas, the Revolutionary Army gets its own troops, Armament Haki shows in battle, and a bug report you can send with one button.</p>
+          </article>
+        </li>
+      </ol>
+      <details class="anteriores">
+        <summary><span lang="es">Versiones anteriores: 0.9.2, 0.9.1 y 0.9.0</span><span lang="en">Earlier releases: 0.9.2, 0.9.1 and 0.9.0</span></summary>
+        <div class="anteriores-dentro">
+          <ol class="cronica">
+        <li>
+          <time><span lang="es">28 oct</span><span lang="en">Oct 28</span></time>
+          <article class="nota-version">
+            <h3><b>0.9.2</b><span class="nombre-v"><span lang="es">«Poderes despiertos»</span><span lang="en">"Awakened Powers"</span></span></h3>
+            <p lang="es">Las Frutas del Diablo y el Haki se usan con una tecla en mitad de la batalla, los estilos de lucha tienen su técnica, el Haki llega a su nivel más alto, algunas frutas despiertan y llegan 44 personajes nuevos y misiones de los arcos del canon.</p>
+            <p lang="en">Devil Fruits and Haki go on a key in the middle of battle, fighting styles get their own technique, Haki reaches its highest level, some fruits awaken, and 44 new characters arrive with quests from the canon arcs.</p>
+          </article>
+        </li>
+        <li class="menor">
+          <time><span lang="es">25 oct</span><span lang="en">Oct 25</span></time>
+          <article class="nota-version">
+            <h3>0.9.1 · hotfix 1</h3>
+            <p lang="es">Arregla un cierre raro tras muchos días de partida con muchos grupos en el mar, y el mismo tipo de cierre cuando una flota grande se mueve como ejército.</p>
+            <p lang="en">Fixes a rare crash after many in-game days with lots of parties at sea, and the same kind of crash when a big fleet moves as an army.</p>
+          </article>
+        </li>
+        <li>
+          <time><span lang="es">25 oct</span><span lang="en">Oct 25</span></time>
+          <article class="nota-version">
+            <h3><b>0.9.1</b><span class="nombre-v"><span lang="es">«Grand Line»</span><span lang="en">"Grand Line"</span></span></h3>
+            <p lang="es">Reyes Marinos en el Calm Belt, el Log Pose en Paradise, el Coup de Burst y el Soldier Dock de la Franky House, asaltos a la costa en 74 aldeas y sucesos en el mar.</p>
+            <p lang="en">Sea Kings in the Calm Belt, the Log Pose in Paradise, the Franky House's Coup de Burst and Soldier Dock, coastal raids on 74 villages, and events at sea.</p>
+          </article>
+        </li>
+        <li>
+          <time><span lang="es">21 oct</span><span lang="en">Oct 21</span></time>
+          <article class="nota-version">
+            <h3><b>0.9.0</b><span class="nombre-v"><span lang="es">«Cielo y Mar»</span><span lang="en">"Sky and Sea"</span></span></h3>
+            <p lang="es">La primera beta pública: Skypiea de punta a punta, la Isla Gyojin por fin bajo el mar y batallas navales con las reglas de One Piece.</p>
+            <p lang="en">The first public beta: Skypiea from end to end, Fish-Man Island finally under the sea, and naval battles with One Piece rules.</p>
+          </article>
+        </li>
+          </ol>
+        </div>
+      </details>
+      <p class="mas-notas" lang="es">Las notas completas de cada versión están en la pestaña <a href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018?tab=logs" target="_blank" rel="noopener">Changelog de Nexus</a> y en la carpeta del mod.</p>
+      <p class="mas-notas" lang="en">Full notes for every release are in the <a href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018?tab=logs" target="_blank" rel="noopener">Nexus Changelog tab</a> and in the mod folder.</p>
+    </div>
+  </section>
 
   <section id="mundo" class="gutter">
     <div class="col">
@@ -508,107 +621,6 @@ footer p { color: var(--suave); font-size: 13.5px; max-width: 90ch; }
           <p lang="en">One Piece origins in the character creator. Be born into Garp's, Whitebeard's or Big Mom's family, the Kozuki clan or among the giants.</p>
         </article>
       </div>
-    </div>
-  </section>
-
-  <section id="proxima" class="gutter">
-    <div class="col">
-      <div class="proxima">
-        <div>
-          <a class="pastilla viva" href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018?tab=files" target="_blank" rel="noopener"><span lang="es">Ya disponible</span><span lang="en">Out now</span></a>
-          <h2 class="titulo-sec oro-texto" style="margin-top:16px"><span lang="es">Novedades de la 0.9.4</span><span lang="en">New in 0.9.4</span></h2>
-          <div class="teclas" aria-hidden="true">
-            <div class="tecla">B<small lang="es">distancia</small><small lang="en">ranged</small></div>
-            <div class="tecla">N<small lang="es">área</small><small lang="en">area</small></div>
-            <div class="tecla">M<small lang="es">poder</small><small lang="en">power</small></div>
-          </div>
-          <p class="nota" lang="es" style="margin-top:34px">¿Ya tienes la 0.9.3? Baja solo el «0.9.4 update» en Nexus y descomprímelo encima del mod. Tus partidas siguen valiendo.</p>
-          <p class="nota" lang="en" style="margin-top:34px">Already on 0.9.3? Just grab the "0.9.4 update" on Nexus and unzip it over the mod. Your saves keep working.</p>
-        </div>
-        <ul class="lista-proxima">
-          <li><span class="ico">✦</span><span><span lang="es"><b>Tres técnicas por fruta y por estilo</b><span>Con modelos propios: cortes que vuelan, rayos del cielo, ondas, cúpulas y púas.</span></span><span lang="en"><b>Three techniques per fruit and style</b><span>With the mod's own models: flying slashes, lightning from the sky, waves, domes and spikes.</span></span></span></li>
-          <li><span class="ico">🌊</span><span><span lang="es"><b>Reyes Marinos salvajes</b><span>Batallas navales contra ellos en tres tamaños, y puedes salir a pescarlos.</span></span><span lang="en"><b>Wild Sea Kings</b><span>Naval battles against them in three sizes, and you can go fishing for them.</span></span></span></li>
-          <li><span class="ico">🍺</span><span><span lang="es"><b>Aspirantes a nakama</b><span>La gente de las tabernas, con su oficio, su mar y su sueño.</span></span><span lang="en"><b>Would-be nakama</b><span>Tavern folk with their own crew role, home sea and dream.</span></span></span></li>
-          <li><span class="ico">🧪</span><span><span lang="es"><b>Egghead, Lulusia y mapas del tesoro</b><span>Sucesos del canon en tus partidas nuevas, y tesoros que se cavan de verdad.</span></span><span lang="en"><b>Egghead, Lulusia and treasure maps</b><span>Canon events in your new games, and treasure you actually dig up.</span></span></span></li>
-          <li><span class="ico">⛵</span><span><span lang="es"><b>Barcos con diseño propio</b><span>En las batallas navales: 10 cascos en tres estilos, el tuyo, el de la Marina y el de los piratas.</span></span><span lang="en"><b>Ships with the mod's own designs</b><span>In naval battles: 10 hulls in three styles, yours, the Marines' and the pirates'.</span></span></span></li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section id="noticias" class="gutter">
-    <div class="col">
-      <div class="cabeza">
-        <span class="ceja"><span lang="es">Diario de a bordo</span><span lang="en">Ship's log</span></span>
-        <h2 class="titulo-sec oro-texto"><span lang="es">Noticias</span><span lang="en">News</span></h2>
-        <p class="entradilla" lang="es">Todas las versiones de la beta, de la más nueva a la primera. Las partidas siguen valiendo de una a otra.</p>
-        <p class="entradilla" lang="en">Every beta release, newest first. Your saves carry over from one to the next.</p>
-      </div>
-      <div class="canales">
-        <a href="https://discord.gg/eHTTNDrh8d" target="_blank" rel="noopener">Discord <small><span lang="es">sale aquí primero</span><span lang="en">first to know</span></small></a>
-        <a href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018?tab=logs" target="_blank" rel="noopener">Nexus Mods <small><span lang="es">notas completas</span><span lang="en">full patch notes</span></small></a>
-        <a href="https://www.moddb.com/mods/one-piece-nuevo-mundo" target="_blank" rel="noopener">ModDB</a>
-      </div>
-      <ol class="cronica">
-        <li>
-          <time><span lang="es">10 nov</span><span lang="en">Nov 10</span></time>
-          <article class="nota-version">
-            <h3><b>0.9.4</b><span class="nombre-v"><span lang="es">«La isla del futuro»</span><span lang="en">"The Island of the Future"</span></span><span class="nueva"><span lang="es">La última</span><span lang="en">Latest</span></span></h3>
-            <p lang="es">Tres técnicas por fruta y por estilo (B, N y M) con modelos propios, Reyes Marinos salvajes, aspirantes a nakama en las tabernas, Lulusia y el incidente de Egghead, la bitácora del capitán, mapas del tesoro de verdad, barcos con diseño propio y un cartel que cuesta más subir.</p>
-            <p lang="en">Three techniques per fruit and per style (B, N and M) with the mod's own models, wild Sea Kings, would-be nakama in the taverns, Lulusia and the Egghead Incident, the Captain's Log, real treasure maps, ships with the mod's own designs and a bounty that is harder to raise.</p>
-          </article>
-        </li>
-        <li class="menor">
-          <time><span lang="es">4 nov</span><span lang="en">Nov 4</span></time>
-          <article class="nota-version">
-            <h3>0.9.3 · hotfix 1</h3>
-            <p lang="es">Arregla un cierre al hablar con algunos vagabundos, otro al despedir a ciertos compañeros y los retratos que se acumulaban en memoria en partidas largas. Ya va dentro de la 0.9.4.</p>
-            <p lang="en">Fixes a crash when talking to some tavern wanderers, another when dismissing certain companions, and portraits piling up in memory over long sessions. Already inside 0.9.4.</p>
-          </article>
-        </li>
-        <li>
-          <time><span lang="es">3 nov</span><span lang="en">Nov 3</span></time>
-          <article class="nota-version">
-            <h3><b>0.9.3</b><span class="nombre-v"><span lang="es">«Bajo su bandera»</span><span lang="en">"Under Their Flag"</span></span></h3>
-            <p lang="es">Las tripulaciones sin islas cobran tributo a las aldeas (y tú también puedes), domadores de Reyes Marinos por los mares, tropas propias para el Ejército Revolucionario, el Haki de armadura se ve en la batalla y un informe de fallos que se manda con un botón.</p>
-            <p lang="en">Crews without islands make villages pay tribute (and so can you), Sea King tamers roam the seas, the Revolutionary Army gets its own troops, Armament Haki shows in battle, and a bug report you can send with one button.</p>
-          </article>
-        </li>
-        <li>
-          <time><span lang="es">28 oct</span><span lang="en">Oct 28</span></time>
-          <article class="nota-version">
-            <h3><b>0.9.2</b><span class="nombre-v"><span lang="es">«Poderes despiertos»</span><span lang="en">"Awakened Powers"</span></span></h3>
-            <p lang="es">Las Frutas del Diablo y el Haki se usan con una tecla en mitad de la batalla, los estilos de lucha tienen su técnica, el Haki llega a su nivel más alto, algunas frutas despiertan y llegan 44 personajes nuevos y misiones de los arcos del canon.</p>
-            <p lang="en">Devil Fruits and Haki go on a key in the middle of battle, fighting styles get their own technique, Haki reaches its highest level, some fruits awaken, and 44 new characters arrive with quests from the canon arcs.</p>
-          </article>
-        </li>
-        <li class="menor">
-          <time><span lang="es">25 oct</span><span lang="en">Oct 25</span></time>
-          <article class="nota-version">
-            <h3>0.9.1 · hotfix 1</h3>
-            <p lang="es">Arregla un cierre raro tras muchos días de partida con muchos grupos en el mar, y el mismo tipo de cierre cuando una flota grande se mueve como ejército.</p>
-            <p lang="en">Fixes a rare crash after many in-game days with lots of parties at sea, and the same kind of crash when a big fleet moves as an army.</p>
-          </article>
-        </li>
-        <li>
-          <time><span lang="es">25 oct</span><span lang="en">Oct 25</span></time>
-          <article class="nota-version">
-            <h3><b>0.9.1</b><span class="nombre-v"><span lang="es">«Grand Line»</span><span lang="en">"Grand Line"</span></span></h3>
-            <p lang="es">Reyes Marinos en el Calm Belt, el Log Pose en Paradise, el Coup de Burst y el Soldier Dock de la Franky House, asaltos a la costa en 74 aldeas y sucesos en el mar.</p>
-            <p lang="en">Sea Kings in the Calm Belt, the Log Pose in Paradise, the Franky House's Coup de Burst and Soldier Dock, coastal raids on 74 villages, and events at sea.</p>
-          </article>
-        </li>
-        <li>
-          <time><span lang="es">21 oct</span><span lang="en">Oct 21</span></time>
-          <article class="nota-version">
-            <h3><b>0.9.0</b><span class="nombre-v"><span lang="es">«Cielo y Mar»</span><span lang="en">"Sky and Sea"</span></span></h3>
-            <p lang="es">La primera beta pública: Skypiea de punta a punta, la Isla Gyojin por fin bajo el mar y batallas navales con las reglas de One Piece.</p>
-            <p lang="en">The first public beta: Skypiea from end to end, Fish-Man Island finally under the sea, and naval battles with One Piece rules.</p>
-          </article>
-        </li>
-      </ol>
-      <p class="mas-notas" lang="es">Las notas completas de cada versión están en la pestaña <a href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018?tab=logs" target="_blank" rel="noopener">Changelog de Nexus</a> y en la carpeta del mod.</p>
-      <p class="mas-notas" lang="en">Full notes for every release are in the <a href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018?tab=logs" target="_blank" rel="noopener">Nexus Changelog tab</a> and in the mod folder.</p>
     </div>
   </section>
 
