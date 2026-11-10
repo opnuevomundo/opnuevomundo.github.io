@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{box-sizing:border-box}body{margin:0;padding:0}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<title>One Piece: Nuevo Mundo</title>
+<meta name="description" content="Conversión total de One Piece para Mount & Blade II: Bannerlord con War Sails. Navega el Grand Line, sube a Skypiea, baja a la Isla Gyojin y pelea con Frutas del Diablo y Haki. Gratis, en español e inglés.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="One Piece: Nuevo Mundo">
+<meta property="og:description" content="Conversión total de One Piece para Mount & Blade II: Bannerlord con War Sails. Navega el Grand Line, sube a Skypiea, baja a la Isla Gyojin y pelea con Frutas del Diablo y Haki. Gratis, en español e inglés.">
+<meta property="og:url" content="https://opnuevomundo.github.io/">
+<meta property="og:image" content="https://opnuevomundo.github.io/assets/portada.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<meta name="theme-color" content="#050d1b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Manrope:wght@400;600;700;800&family=Pirata+One&display=swap">
+<style>
+/* Concepto: «Log Pose» de noche. Abismo azul, oro de brújula, hueso de cartel y un toque turquesa de mar para lo interactivo.
+   La pieza fuerte es el mapa del mundo que se explora; el resto acompaña. Columna de 1180 px, bandas a todo el ancho. */
+:root {
+  --abismo: #050d1b;
+  --noche: #0a1830;
+  --marea: #10264a;
+  --cristal: rgba(255, 255, 255, .055);
+  --cristal-2: rgba(255, 255, 255, .09);
+  --borde: rgba(242, 198, 109, .2);
+  --borde-suave: rgba(255, 255, 255, .1);
+  --oro: #f2c66d;
+  --oro-claro: #ffe2a3;
+  --cobre: #c98d2c;
+  --hueso: #f7edd8;
+  --pergamino: #ead9b2;
+  --texto: #dfe7f1;
+  --suave: #93a6be;
+  --rojo: #ea4a3f;
+  --turquesa: #46d3c9;
+  --rotulo: "Pirata One", "Old English Text MT", Georgia, serif;
+  --versal: "Cinzel", "Trajan Pro", Georgia, serif;
+  --cuerpo: "Manrope", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+:root:not([data-lang="en"]) [lang="en"], :root[data-lang="en"] [lang="es"] { display: none !important; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--abismo); color: var(--texto); font-family: var(--cuerpo); font-size: 17px; line-height: 1.6; overflow-x: hidden; }
+.gutter { padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); }
+.col { max-width: 1180px; margin: 0 auto; }
+h1, h2, h3 { margin: 0; font-weight: 400; text-wrap: balance; }
+p { margin: 0; }
+a { color: var(--oro); }
+img { max-width: 100%; height: auto; display: block; }
+button { font: inherit; }
+:focus-visible { outline: 3px solid var(--turquesa); outline-offset: 3px; border-radius: 8px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+.ceja { font-weight: 800; font-size: 12.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--turquesa); display: inline-flex; align-items: center; gap: 10px; }
+.ceja::before { content: ""; width: 26px; height: 2px; background: currentColor; border-radius: 2px; }
+.oro-texto { background: linear-gradient(180deg, var(--oro-claro) 0%, var(--oro) 45%, var(--cobre) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.titulo-sec { font-family: var(--rotulo); font-size: clamp(44px, 6.5vw, 76px); line-height: .95; }
+.entradilla { color: var(--suave); font-size: 18px; max-width: 60ch; }
+
+/* ---------- barra ---------- */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--abismo); }
+.barra { position: fixed; top: env(safe-area-inset-top, 0px); left: 0; right: 0; z-index: 20; transition: background .3s, border-color .3s, backdrop-filter .3s; border-bottom: 1px solid transparent; }
+.barra.solida { background: rgba(5, 13, 27, .78); backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3); border-color: var(--borde-suave); }
+.barra .col { display: flex; align-items: center; gap: 18px; padding-block: 12px; }
+.marca { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: auto; }
+.marca img { width: 40px; height: 40px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(242, 198, 109, .5); }
+.marca span { font-family: var(--rotulo); font-size: 27px; line-height: 1; color: var(--oro); }
+.menu { display: flex; gap: 4px; }
+.menu a { color: var(--texto); text-decoration: none; font-weight: 700; font-size: 14px; padding: 8px 12px; border-radius: 999px; transition: background .2s, color .2s; }
+.menu a:hover { background: var(--cristal-2); color: var(--oro-claro); }
+@media (max-width: 1020px) { .menu { display: none; } }
+.idioma { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--cristal); border: 1px solid var(--borde-suave); }
+.idioma button { background: none; border: 0; color: var(--suave); font-weight: 800; font-size: 12.5px; letter-spacing: .08em; padding: 6px 11px; border-radius: 999px; cursor: pointer; transition: background .2s, color .2s; }
+.idioma button[aria-pressed="true"] { background: var(--oro); color: var(--abismo); }
+
+.boton { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 16px; padding: 14px 24px; border-radius: 14px; color: #1a1205; background: linear-gradient(180deg, var(--oro-claro), var(--oro) 55%, var(--cobre)); box-shadow: 0 10px 30px rgba(242, 198, 109, .25), inset 0 1px 0 rgba(255, 255, 255, .6); transition: transform .2s, box-shadow .2s; border: 0; cursor: pointer; }
+.boton::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .55) 50%, transparent 70%); transform: translateX(-120%); transition: transform .7s ease; }
+.boton:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(242, 198, 109, .35), inset 0 1px 0 rgba(255, 255, 255, .6); }
+.boton:hover::after { transform: translateX(120%); }
+.boton.cristal { color: var(--hueso); background: var(--cristal-2); box-shadow: inset 0 0 0 1px var(--borde-suave); backdrop-filter: blur(8px); }
+.boton.cristal:hover { box-shadow: inset 0 0 0 1px var(--oro); }
+.boton.peq { padding: 9px 16px; font-size: 14px; border-radius: 11px; }
+@media (max-width: 560px) { .barra .boton.peq { display: none; } }
+.boton svg { width: 20px; height: 20px; flex: none; }
+
+/* ---------- portada ---------- */
+.portada { position: relative; isolation: isolate; overflow: hidden; padding-top: calc(76px + env(safe-area-inset-top, 0px)); }
+.portada .fondo { position: absolute; inset: -4%; z-index: -3; background: url("assets/portada.jpg") center 40% / cover no-repeat; animation: kenburns 26s ease-in-out infinite alternate; }
+@keyframes kenburns { from { transform: scale(1.08) translate(1%, -1%); } to { transform: scale(1) translate(-1%, 1%); } }
+.portada::before { content: ""; position: absolute; inset: 0; z-index: -2; background: linear-gradient(90deg, rgba(5, 13, 27, .96) 0%, rgba(5, 13, 27, .82) 38%, rgba(5, 13, 27, .35) 70%, rgba(5, 13, 27, .55) 100%), linear-gradient(0deg, var(--abismo) 0%, transparent 35%); }
+#chispas { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.portada .col { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 40px; align-items: center; padding-block: 64px 120px; }
+@media (max-width: 940px) { .portada .col { grid-template-columns: 1fr; padding-block: 40px 110px; } }
+.portada .texto { display: grid; gap: 22px; min-width: 0; }
+.sello { display: flex; align-items: center; gap: 14px; }
+.brujula { width: 74px; height: 74px; position: relative; flex: none; }
+.brujula img { width: 100%; height: 100%; border-radius: 50%; }
+.brujula::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px dashed rgba(242, 198, 109, .55); animation: girar 30s linear infinite; }
+@keyframes girar { to { transform: rotate(360deg); } }
+.sello .ceja { color: var(--oro); }
+.portada h1 { display: grid; gap: 4px; }
+.portada h1 .pre { font-family: var(--versal); font-weight: 700; letter-spacing: .3em; font-size: clamp(16px, 2vw, 22px); color: var(--hueso); text-transform: uppercase; }
+.portada h1 .nombre { font-family: var(--rotulo); font-size: clamp(76px, 12vw, 150px); line-height: .85; filter: drop-shadow(0 6px 30px rgba(242, 198, 109, .25)); }
+.portada .lead { font-size: clamp(17px, 1.6vw, 20px); max-width: 50ch; color: #e9eef6; }
+.acciones { display: flex; flex-wrap: wrap; gap: 12px; }
+.pastillas { display: flex; flex-wrap: wrap; gap: 8px; }
+.pastilla { font-size: 13px; font-weight: 700; padding: 6px 12px; border-radius: 999px; background: var(--cristal); border: 1px solid var(--borde-suave); color: var(--texto); }
+.pastilla b { color: var(--oro); }
+.pastilla.viva { border-color: rgba(70, 211, 201, .45); color: var(--turquesa); text-decoration: none; }
+.pastilla.viva::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--turquesa); margin-right: 8px; box-shadow: 0 0 0 0 rgba(70, 211, 201, .6); animation: latido 2s infinite; vertical-align: 1px; }
+@keyframes latido { 70% { box-shadow: 0 0 0 9px rgba(70, 211, 201, 0); } 100% { box-shadow: 0 0 0 0 rgba(70, 211, 201, 0); } }
+
+.abanico { position: relative; height: 420px; }
+@media (max-width: 940px) { .abanico { height: 300px; max-width: 520px; width: 100%; justify-self: center; } }
+.abanico figure { margin: 0; position: absolute; width: 74%; left: 13%; top: 14%; border-radius: 16px; overflow: hidden; border: 2px solid rgba(242, 198, 109, .55); box-shadow: 0 30px 60px rgba(0, 0, 0, .55); transition: transform .5s cubic-bezier(.2, .8, .2, 1); background: var(--marea); }
+.abanico figure img { aspect-ratio: 16 / 10; object-fit: cover; width: 100%; }
+.abanico figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 30px 14px 10px; font-size: 13px; font-weight: 700; color: var(--hueso); background: linear-gradient(transparent, rgba(5, 13, 27, .85)); }
+.abanico figure:nth-child(1) { transform: rotate(-9deg) translate(-12%, 6%); }
+.abanico figure:nth-child(2) { transform: rotate(7deg) translate(12%, 10%); }
+.abanico figure:nth-child(3) { transform: rotate(-1deg) translate(0, -6%); z-index: 2; }
+.abanico:hover figure:nth-child(1) { transform: rotate(-14deg) translate(-26%, 4%); }
+.abanico:hover figure:nth-child(2) { transform: rotate(12deg) translate(26%, 12%); }
+.abanico:hover figure:nth-child(3) { transform: rotate(0) translate(0, -10%) scale(1.03); }
+
+.olas { position: absolute; left: 0; right: 0; bottom: -2px; height: 110px; z-index: 1; pointer-events: none; }
+.olas svg { position: absolute; bottom: 0; width: 200%; height: 100%; }
+.olas .o1 { animation: oleaje 18s linear infinite; opacity: .35; }
+.olas .o2 { animation: oleaje 12s linear infinite reverse; opacity: .55; }
+.olas .o3 { animation: oleaje 22s linear infinite; }
+@keyframes oleaje { to { transform: translateX(-50%); } }
+
+/* ---------- cinta ---------- */
+.cinta { border-block: 1px solid var(--borde); background: linear-gradient(90deg, #0b1d39, #0a1830); overflow: hidden; position: relative; }
+.cinta .pista { display: flex; width: max-content; animation: cinta 40s linear infinite; }
+.cinta:hover .pista { animation-play-state: paused; }
+.cinta ul { display: flex; gap: 0; margin: 0; padding: 14px 0; list-style: none; }
+.cinta li { font-family: var(--versal); font-weight: 700; font-size: 15px; letter-spacing: .14em; text-transform: uppercase; color: var(--pergamino); white-space: nowrap; padding: 0 22px; display: flex; align-items: center; gap: 44px; }
+.cinta li::after { content: "✦"; color: var(--oro); font-size: 12px; }
+@keyframes cinta { to { transform: translateX(-50%); } }
+
+/* ---------- cifras ---------- */
+.cifras .col { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; padding-block: 48px 0; }
+@media (max-width: 760px) { .cifras .col { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.cifra { padding: 20px; border-radius: 18px; background: var(--cristal); border: 1px solid var(--borde-suave); display: grid; gap: 4px; }
+.cifra b { font-family: var(--rotulo); font-size: clamp(40px, 5vw, 56px); line-height: 1; font-weight: 400; }
+.cifra span { color: var(--suave); font-size: 14.5px; font-weight: 600; }
+
+section { padding-block: 96px 0; scroll-margin-top: 80px; }
+.cabeza { display: grid; gap: 14px; margin-bottom: 36px; }
+
+/* ---------- mapa ---------- */
+.mapa-envoltura { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 28px; align-items: start; }
+@media (max-width: 940px) { .mapa-envoltura { grid-template-columns: 1fr; } }
+.mapa { position: relative; border-radius: 24px; overflow: hidden; border: 1px solid var(--borde); box-shadow: 0 40px 80px rgba(0, 0, 0, .5), inset 0 0 120px rgba(0, 0, 0, .6); aspect-ratio: 1 / 1; background: #0d2a52; }
+.mapa > img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.9) brightness(.9); }
+.mapa::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 50%, transparent 55%, rgba(5, 13, 27, .55) 100%); }
+.punto { position: absolute; z-index: 2; transform: translate(-50%, -50%); width: 30px; height: 30px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: transparent; display: grid; place-items: center; }
+.punto::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--oro); box-shadow: 0 0 0 3px rgba(5, 13, 27, .8), 0 0 14px rgba(242, 198, 109, .9); transition: transform .2s, background .2s; }
+.punto::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(242, 198, 109, .8); animation: onda 2.4s ease-out infinite; }
+@keyframes onda { from { transform: scale(.4); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+.punto:hover::before { transform: scale(1.35); }
+.punto[aria-pressed="true"]::before { background: var(--turquesa); box-shadow: 0 0 0 3px rgba(5, 13, 27, .8), 0 0 18px rgba(70, 211, 201, 1); transform: scale(1.4); }
+.punto[aria-pressed="true"]::after { border-color: rgba(70, 211, 201, .9); }
+.etiqueta-mapa { position: absolute; z-index: 3; transform: translate(-50%, calc(-100% - 18px)); background: rgba(5, 13, 27, .9); border: 1px solid var(--borde); color: var(--hueso); font-size: 13px; font-weight: 800; padding: 5px 10px; border-radius: 8px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .15s; }
+.etiqueta-mapa.ver { opacity: 1; }
+.regiones { position: absolute; inset: 0; pointer-events: none; z-index: 1; font-family: var(--versal); font-weight: 700; font-size: clamp(9px, 1.2vw, 13px); letter-spacing: .2em; color: rgba(247, 237, 216, .0); }
+
+.ficha-isla { position: sticky; top: 96px; border-radius: 24px; overflow: hidden; background: linear-gradient(180deg, #11284c, #0a1932); border: 1px solid var(--borde); box-shadow: 0 30px 60px rgba(0, 0, 0, .45); display: grid; }
+.ficha-isla .foto-isla { position: relative; aspect-ratio: 16 / 10; background: radial-gradient(circle at 30% 30%, #1f4a7f, #0b1d39); overflow: hidden; }
+.ficha-isla .foto-isla img { width: 100%; height: 100%; object-fit: cover; animation: aparecer .5s ease; }
+@keyframes aparecer { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: none; } }
+.ficha-isla .sin-foto { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--rotulo); font-size: 64px; color: rgba(242, 198, 109, .28); }
+.ficha-isla .mar-tag { position: absolute; top: 14px; left: 14px; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; padding: 6px 11px; border-radius: 999px; background: rgba(5, 13, 27, .8); color: var(--turquesa); border: 1px solid rgba(70, 211, 201, .4); }
+.ficha-isla .cuerpo { padding: 24px; display: grid; gap: 12px; }
+.ficha-isla h3 { font-family: var(--rotulo); font-size: 44px; line-height: 1; color: var(--oro); }
+.ficha-isla p { color: var(--texto); }
+.ficha-isla .pasos { display: flex; gap: 10px; align-items: center; margin-top: 6px; }
+.ficha-isla .pasos button { width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--borde-suave); background: var(--cristal); color: var(--hueso); cursor: pointer; font-size: 18px; transition: background .2s, border-color .2s; }
+.ficha-isla .pasos button:hover { border-color: var(--oro); background: var(--cristal-2); }
+.ficha-isla .pasos span { color: var(--suave); font-size: 14px; font-weight: 700; margin-left: 4px; font-variant-numeric: tabular-nums; }
+
+/* ---------- caminos ---------- */
+.pestanas { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.pestana { border: 1px solid var(--borde-suave); background: var(--cristal); color: var(--texto); font-weight: 800; font-size: 15px; padding: 11px 18px; border-radius: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: background .2s, border-color .2s, color .2s, transform .2s; }
+.pestana:hover { transform: translateY(-2px); border-color: var(--borde); }
+.pestana[aria-selected="true"] { background: linear-gradient(180deg, var(--oro-claro), var(--oro)); color: #1a1205; border-color: transparent; }
+.pestana i { font-style: normal; font-size: 18px; }
+.camino { position: relative; isolation: isolate; border-radius: 26px; overflow: hidden; border: 1px solid var(--borde); min-height: 440px; display: grid; align-items: end; }
+.camino .bg { position: absolute; inset: 0; z-index: -2; background-size: cover; background-position: center; transition: opacity .5s; }
+.camino::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(5, 13, 27, .95) 0%, rgba(5, 13, 27, .85) 45%, rgba(5, 13, 27, .25) 100%); }
+@media (max-width: 760px) { .camino::before { background: linear-gradient(0deg, rgba(5, 13, 27, .97) 35%, rgba(5, 13, 27, .5) 100%); } }
+.camino .contenido { padding: clamp(24px, 4vw, 44px); display: grid; gap: 16px; max-width: 620px; }
+.camino h3 { font-family: var(--rotulo); font-size: clamp(44px, 6vw, 64px); line-height: .95; }
+.camino ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.camino li { display: grid; grid-template-columns: 26px 1fr; gap: 8px; color: var(--texto); }
+.camino li::before { content: "✦"; color: var(--oro); }
+.camino .anim { animation: subir .45s cubic-bezier(.2, .8, .2, 1); }
+@keyframes subir { from { opacity: .2; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* ---------- rasgos (bento) ---------- */
+.bento { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
+.caja { grid-column: span 2; position: relative; border-radius: 22px; padding: 26px; background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .025)); border: 1px solid var(--borde-suave); overflow: hidden; display: grid; gap: 12px; align-content: start; transition: border-color .3s, transform .3s; transform-style: preserve-3d; min-width: 0; }
+.caja::before { content: ""; position: absolute; inset: 0; background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 0%), rgba(242, 198, 109, .14), transparent 45%); opacity: 0; transition: opacity .3s; pointer-events: none; }
+.caja:hover { border-color: var(--borde); }
+.caja:hover::before { opacity: 1; }
+.caja.ancha { grid-column: span 3; }
+.caja.lado { grid-column: span 2; }
+.caja.foto-caja { grid-column: span 4; grid-row: span 2; padding: 0; align-content: end; min-height: 420px; }
+.caja.foto-caja img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .8s ease; }
+.caja.foto-caja:hover img { transform: scale(1.05); }
+.caja.foto-caja .txt { position: relative; padding: 28px; display: grid; gap: 10px; background: linear-gradient(transparent, rgba(5, 13, 27, .92) 40%); padding-top: 90px; }
+@media (max-width: 980px) { .caja, .caja.ancha { grid-column: span 3; }
+.caja.lado { grid-column: span 2; } .caja.foto-caja { grid-column: span 6; } }
+@media (max-width: 620px) { .caja, .caja.ancha, .caja.lado, .caja.foto-caja { grid-column: span 6; } .caja.foto-caja { min-height: 360px; } }
+.icono { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: rgba(242, 198, 109, .12); border: 1px solid var(--borde); color: var(--oro); }
+.icono svg { width: 24px; height: 24px; }
+.caja h3 { font-weight: 800; font-size: 20px; color: var(--hueso); }
+.caja p { color: var(--suave); font-size: 15.5px; }
+.caja.foto-caja h3 { font-family: var(--rotulo); font-weight: 400; font-size: clamp(36px, 4vw, 48px); line-height: 1; color: var(--oro); }
+.caja.foto-caja p { color: var(--texto); font-size: 16.5px; max-width: 52ch; }
+
+/* ---------- 0.9.4 ---------- */
+.proxima { position: relative; border-radius: 28px; overflow: hidden; padding: clamp(26px, 4vw, 48px); background: radial-gradient(600px circle at 90% 0%, rgba(70, 211, 201, .16), transparent 60%), radial-gradient(500px circle at 0% 100%, rgba(242, 198, 109, .14), transparent 60%), linear-gradient(135deg, #12305a, #0a1a35); border: 1px solid var(--borde); display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 36px; align-items: center; }
+@media (max-width: 860px) { .proxima { grid-template-columns: 1fr; } }
+.etiqueta-roja { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; background: rgba(234, 74, 63, .15); color: #ff8a80; border: 1px solid rgba(234, 74, 63, .45); padding: 6px 12px; border-radius: 999px; }
+.teclas { display: flex; gap: 12px; margin: 20px 0 6px; flex-wrap: wrap; }
+.tecla { width: 66px; height: 66px; border-radius: 16px; display: grid; place-items: center; font: 800 26px ui-monospace, Consolas, monospace; color: #1a1205; background: linear-gradient(180deg, #fff6df, var(--pergamino)); box-shadow: 0 6px 0 #9c7f45, 0 14px 24px rgba(0, 0, 0, .4); transition: transform .12s, box-shadow .12s; cursor: default; position: relative; }
+.tecla:hover { transform: translateY(5px); box-shadow: 0 1px 0 #9c7f45, 0 6px 14px rgba(0, 0, 0, .4); }
+.tecla small { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); font: 700 11px var(--cuerpo); color: var(--suave); white-space: nowrap; letter-spacing: .04em; }
+.lista-proxima { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+.lista-proxima li { display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; padding: 14px; border-radius: 16px; background: rgba(5, 13, 27, .35); border: 1px solid var(--borde-suave); }
+.lista-proxima .ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: rgba(242, 198, 109, .12); color: var(--oro); font-size: 20px; }
+.lista-proxima b { color: var(--hueso); display: block; }
+.lista-proxima span span { color: var(--suave); font-size: 15px; }
+
+/* ---------- galería ---------- */
+/* ---------- noticias ---------- */
+.canales { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+.canales a { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 800; font-size: 14px; color: var(--hueso); padding: 9px 14px; border-radius: 12px; background: var(--cristal); border: 1px solid var(--borde-suave); transition: border-color .2s, color .2s; }
+.canales a:hover { border-color: var(--oro); color: var(--oro-claro); }
+.canales a small { font-weight: 600; color: var(--suave); }
+.cronica { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; position: relative; }
+.cronica::before { content: ""; position: absolute; left: 118px; top: 8px; bottom: 8px; border-left: 2px dashed var(--borde); }
+.cronica li { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 30px; align-items: start; position: relative; }
+.cronica li::before { content: ""; position: absolute; left: 112px; top: 22px; width: 14px; height: 14px; border-radius: 50%; background: var(--abismo); border: 3px solid var(--oro); }
+.cronica li.menor::before { width: 10px; height: 10px; left: 114px; top: 20px; border-color: var(--suave); }
+.cronica time { font-family: var(--versal); font-weight: 700; font-size: 15px; letter-spacing: .08em; color: var(--pergamino); text-align: right; padding-top: 16px; white-space: nowrap; }
+.nota-version { padding: 18px 20px; border-radius: 18px; background: var(--cristal); border: 1px solid var(--borde-suave); display: grid; gap: 8px; min-width: 0; }
+.cronica li:first-child .nota-version { border-color: var(--borde); background: linear-gradient(135deg, rgba(242, 198, 109, .1), rgba(255, 255, 255, .03)); }
+.nota-version h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.nota-version h3 b { font-family: var(--rotulo); font-weight: 400; font-size: 34px; line-height: 1; color: var(--oro); }
+.nota-version h3 .nombre-v { font-weight: 800; font-size: 18px; color: var(--hueso); }
+.nota-version p { color: var(--suave); font-size: 15.5px; }
+.nota-version .nueva { font-size: 11.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--turquesa); border: 1px solid rgba(70, 211, 201, .45); border-radius: 999px; padding: 3px 9px; align-self: center; }
+.cronica li.menor .nota-version { padding: 12px 18px; background: transparent; border-style: dashed; }
+.cronica li.menor h3 { font-weight: 800; font-size: 15px; color: var(--pergamino); }
+.cronica li.menor p { font-size: 14.5px; }
+.mas-notas { margin-top: 18px; color: var(--suave); font-size: 15px; }
+@media (max-width: 640px) {
+  .cronica::before { left: 6px; }
+  .cronica li { grid-template-columns: minmax(0, 1fr); gap: 6px; padding-left: 26px; }
+  .cronica li::before { left: 0; top: 4px; }
+  .cronica li.menor::before { left: 2px; top: 5px; }
+  .cronica time { text-align: left; padding-top: 0; }
+}
+.galeria-cabeza { display: flex; align-items: end; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: 26px; }
+.flechas { display: flex; gap: 10px; }
+.flechas button { width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--borde); background: var(--cristal); color: var(--oro); font-size: 20px; cursor: pointer; transition: background .2s, transform .2s; }
+.flechas button:hover { background: rgba(242, 198, 109, .15); transform: scale(1.06); }
+.carrusel { display: grid; grid-auto-flow: column; grid-auto-columns: min(560px, 82%); gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 14px; scrollbar-width: thin; scrollbar-color: var(--cobre) transparent; }
+.diapo { scroll-snap-align: start; border: 0; padding: 0; background: var(--marea); border-radius: 20px; overflow: hidden; position: relative; cursor: zoom-in; color: inherit; text-align: left; }
+.diapo img { aspect-ratio: 16 / 10; object-fit: cover; width: 100%; transition: transform .6s ease; }
+.diapo:hover img { transform: scale(1.05); }
+.diapo span { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 18px 14px; font-weight: 800; color: var(--hueso); background: linear-gradient(transparent, rgba(5, 13, 27, .9)); }
+dialog { border: 0; padding: 0; background: transparent; max-width: min(1240px, 94vw); width: 100%; color: var(--hueso); }
+dialog::backdrop { background: rgba(3, 8, 18, .9); backdrop-filter: blur(6px); }
+dialog figure { margin: 0; display: grid; gap: 12px; }
+dialog img { width: 100%; border-radius: 16px; border: 1px solid var(--borde); }
+.visor-pie { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.visor-pie p { margin-right: auto; font-weight: 700; }
+.visor-pie button { background: var(--cristal-2); color: var(--hueso); border: 1px solid var(--borde-suave); border-radius: 12px; font-weight: 800; padding: 10px 16px; cursor: pointer; }
+
+/* ---------- instalar ---------- */
+.pasos-instalar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; counter-reset: paso; }
+@media (max-width: 860px) { .pasos-instalar { grid-template-columns: 1fr; } }
+.paso { position: relative; padding: 28px 24px 24px; border-radius: 22px; background: var(--cristal); border: 1px solid var(--borde-suave); display: grid; gap: 10px; align-content: start; min-width: 0; }
+.paso::before { counter-increment: paso; content: counter(paso); font-family: var(--rotulo); font-size: 68px; line-height: .8; color: transparent; -webkit-text-stroke: 1.5px rgba(242, 198, 109, .7); }
+.paso h3 { font-weight: 800; font-size: 19px; color: var(--hueso); }
+.paso p { color: var(--suave); font-size: 15.5px; }
+code { font: 13.5px ui-monospace, Consolas, monospace; background: rgba(5, 13, 27, .7); border: 1px solid var(--borde-suave); border-radius: 6px; padding: 2px 7px; color: var(--pergamino); overflow-wrap: anywhere; }
+.requisitos { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.requisitos span { font-weight: 700; font-size: 14px; padding: 9px 14px; border-radius: 12px; background: rgba(70, 211, 201, .08); border: 1px solid rgba(70, 211, 201, .3); color: #bdeee9; }
+.nota { color: var(--suave); font-size: 15px; margin-top: 14px; max-width: 80ch; }
+
+/* ---------- apóyanos ---------- */
+.apoyo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 860px) { .apoyo { grid-template-columns: 1fr; } }
+.apoyo .caja { grid-column: auto; }
+.discord-banda { margin-top: 18px; border-radius: 26px; padding: clamp(24px, 4vw, 40px); display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; background: linear-gradient(120deg, #3a45b8, #5865f2 50%, #7983f5); box-shadow: 0 30px 60px rgba(88, 101, 242, .3); }
+.discord-banda h3 { font-family: var(--rotulo); font-size: clamp(36px, 5vw, 52px); line-height: 1; color: #fff; }
+.discord-banda p { color: rgba(255, 255, 255, .85); max-width: 52ch; }
+.discord-banda .boton { background: #fff; color: #2b3194; box-shadow: 0 10px 30px rgba(0, 0, 0, .25); }
+
+/* ---------- preguntas ---------- */
+.preguntas { display: grid; gap: 12px; max-width: 900px; }
+details { border-radius: 18px; background: var(--cristal); border: 1px solid var(--borde-suave); transition: border-color .2s, background .2s; }
+details[open] { border-color: var(--borde); background: var(--cristal-2); }
+summary { cursor: pointer; font-weight: 800; color: var(--hueso); padding: 18px 22px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; color: var(--oro); font-size: 22px; line-height: 1; transition: transform .25s; }
+details[open] summary::after { transform: rotate(45deg); }
+details p { padding: 0 22px 20px; color: var(--suave); }
+
+footer { margin-top: 110px; border-top: 1px solid var(--borde); background: radial-gradient(800px 300px at 50% 0%, rgba(242, 198, 109, .08), transparent 70%), #040a16; }
+footer .col { display: grid; gap: 18px; padding-block: 48px 56px; }
+footer .fila { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+footer .fila img { width: 52px; height: 52px; border-radius: 50%; }
+footer .fila strong { font-family: var(--rotulo); font-weight: 400; font-size: 32px; color: var(--oro); margin-right: auto; }
+footer a { color: var(--texto); font-weight: 700; text-decoration: none; }
+footer a:hover { color: var(--oro); }
+footer p { color: var(--suave); font-size: 13.5px; max-width: 90ch; }
+</style>
+</head>
+<body>
+
+<header class="barra gutter" id="barra">
+  <div class="col">
+    <a class="marca" href="#inicio"><img src="assets/logo.png" alt="" width="40" height="40"><span>Nuevo Mundo</span></a>
+    <nav class="menu" aria-label="Secciones">
+      <a href="#mundo"><span lang="es">El mundo</span><span lang="en">The world</span></a>
+      <a href="#caminos"><span lang="es">Caminos</span><span lang="en">Paths</span></a>
+      <a href="#que-hay"><span lang="es">Qué hay</span><span lang="en">Features</span></a>
+      <a href="#proxima">0.9.4</a>
+      <a href="#noticias"><span lang="es">Noticias</span><span lang="en">News</span></a>
+      <a href="#galeria"><span lang="es">Galería</span><span lang="en">Gallery</span></a>
+      <a href="#instalar"><span lang="es">Instalar</span><span lang="en">Install</span></a>
+    </nav>
+    <div class="idioma" role="group" aria-label="Idioma / Language">
+      <button type="button" id="btn-es" data-idioma="es" aria-pressed="true">ES</button>
+      <button type="button" id="btn-en" data-idioma="en" aria-pressed="false">EN</button>
+    </div>
+    <a class="boton peq" href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018" target="_blank" rel="noopener"><span lang="es">Descargar</span><span lang="en">Download</span></a>
+  </div>
+</header>
+
+<main id="inicio">
+  <div class="portada gutter">
+    <div class="fondo" aria-hidden="true"></div>
+    <canvas id="chispas" aria-hidden="true"></canvas>
+    <div class="col">
+      <div class="texto">
+        <div class="sello">
+          <div class="brujula"><img src="assets/logo.png" alt="" width="74" height="74"></div>
+          <span class="ceja"><span lang="es">Mod para Bannerlord + War Sails</span><span lang="en">Mod for Bannerlord + War Sails</span></span>
+        </div>
+        <h1><span class="pre">One Piece</span><span class="nombre oro-texto">Nuevo Mundo</span></h1>
+        <p class="lead" lang="es">Una conversión total de One Piece para Mount &amp; Blade II. Navega el Grand Line, sube a Skypiea, baja a la Isla Gyojin, pelea con Frutas del Diablo y Haki, y elige bando: Marina, piratas o Revolución.</p>
+        <p class="lead" lang="en">A One Piece total conversion for Mount &amp; Blade II. Sail the Grand Line, ride up to Skypiea, dive to Fish-Man Island, fight with Devil Fruits and Haki, and pick a side: Marines, pirates or the Revolution.</p>
+        <div class="acciones">
+          <a class="boton" href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+            <span lang="es">Descargar en Nexus Mods</span><span lang="en">Download on Nexus Mods</span></a>
+          <a class="boton cristal" href="https://discord.gg/eHTTNDrh8d" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.6 5.3A16.6 16.6 0 0 0 15.5 4l-.5 1a15.3 15.3 0 0 0-6 0l-.5-1a16.6 16.6 0 0 0-4.1 1.3C1.8 9.2 1.1 13 1.4 16.7a16.7 16.7 0 0 0 5 2.6l1.1-1.8a10.8 10.8 0 0 1-1.7-.8l.4-.3a11.9 11.9 0 0 0 11.6 0l.4.3c-.5.3-1.1.6-1.7.8l1.1 1.8a16.6 16.6 0 0 0 5-2.6c.4-4.3-.6-8-2.8-11.4ZM8.7 14.5c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z"/></svg>
+            <span lang="es">Únete al Discord</span><span lang="en">Join the Discord</span></a>
+        </div>
+        <div class="pastillas">
+          <span class="pastilla"><b>v0.9.4</b></span>
+          <span class="pastilla"><span lang="es">Gratis</span><span lang="en">Free</span></span>
+          <span class="pastilla"><span lang="es">Español e inglés</span><span lang="en">English &amp; Spanish</span></span>
+          <a class="pastilla viva" href="#proxima"><span lang="es">0.9.4 ya disponible</span><span lang="en">0.9.4 out now</span></a>
+        </div>
+      </div>
+      <div class="abanico" aria-hidden="true">
+        <figure><img src="assets/isla-gyojin-p.jpg" alt="" width="800" height="450"><figcaption><span lang="es">Isla Gyojin</span><span lang="en">Fish-Man Island</span></figcaption></figure>
+        <figure><img src="assets/elbaph-p.jpg" alt="" width="800" height="450"><figcaption>Elbaph</figcaption></figure>
+        <figure><img src="assets/skypiea-p.jpg" alt="" width="800" height="450"><figcaption>Skypiea</figcaption></figure>
+      </div>
+    </div>
+    <div class="olas" aria-hidden="true">
+      <svg class="o1" viewBox="0 0 1440 110" preserveAspectRatio="none"><path fill="#10264a" d="M0 60 C 120 30 240 30 360 60 S 600 90 720 60 S 960 30 1080 60 S 1320 90 1440 60 V110 H0Z"/></svg>
+      <svg class="o2" viewBox="0 0 1440 110" preserveAspectRatio="none"><path fill="#0b1d39" d="M0 75 C 160 50 320 50 480 75 S 800 100 960 75 S 1280 50 1440 75 V110 H0Z"/></svg>
+      <svg class="o3" viewBox="0 0 1440 110" preserveAspectRatio="none"><path fill="#050d1b" d="M0 90 C 180 75 360 75 540 90 S 900 105 1080 90 S 1260 75 1440 90 V110 H0Z"/></svg>
+    </div>
+  </div>
+
+  <div class="cinta" aria-hidden="true">
+    <div class="pista">
+      <ul><li>Skypiea</li><li lang="es">Isla Gyojin</li><li lang="en">Fish-Man Island</li><li lang="es">Frutas del Diablo</li><li lang="en">Devil Fruits</li><li>Haki</li><li lang="es">Batallas navales</li><li lang="en">Naval battles</li><li>Wano</li><li>Elbaph</li><li>Egghead</li><li>Dressrosa</li><li>Impel Down</li><li>Water 7</li><li>Laugh Tale</li></ul>
+      <ul><li>Skypiea</li><li lang="es">Isla Gyojin</li><li lang="en">Fish-Man Island</li><li lang="es">Frutas del Diablo</li><li lang="en">Devil Fruits</li><li>Haki</li><li lang="es">Batallas navales</li><li lang="en">Naval battles</li><li>Wano</li><li>Elbaph</li><li>Egghead</li><li>Dressrosa</li><li>Impel Down</li><li>Water 7</li><li>Laugh Tale</li></ul>
+    </div>
+  </div>
+
+  <div class="cifras gutter">
+    <div class="col">
+      <div class="cifra"><b class="oro-texto">~200</b><span lang="es">personajes canon</span><span lang="en">canon characters</span></div>
+      <div class="cifra"><b class="oro-texto">~100</b><span lang="es">Frutas del Diablo</span><span lang="en">Devil Fruits</span></div>
+      <div class="cifra"><b class="oro-texto">25</b><span lang="es">nakamas para reclutar</span><span lang="en">nakama to recruit</span></div>
+      <div class="cifra"><b class="oro-texto">10</b><span lang="es">rangos en la Marina</span><span lang="en">Marine ranks</span></div>
+    </div>
+  </div>
+
+  <section id="mundo" class="gutter">
+    <div class="col">
+      <div class="cabeza">
+        <span class="ceja"><span lang="es">Mapa del mod</span><span lang="en">The mod's map</span></span>
+        <h2 class="titulo-sec oro-texto"><span lang="es">Explora el mundo</span><span lang="en">Explore the world</span></h2>
+        <p class="entradilla" lang="es">Los cuatro Blues, el Grand Line partido por la Red Line, Paradise a un lado y el Nuevo Mundo al otro. Toca una isla.</p>
+        <p class="entradilla" lang="en">The four Blues, the Grand Line split by the Red Line, Paradise on one side and the New World on the other. Tap an island.</p>
+      </div>
+      <div class="mapa-envoltura">
+        <div class="mapa" id="mapa">
+          <img src="assets/mapa-mundo.jpg" alt="" width="1400" height="1400">
+          <div class="etiqueta-mapa" id="etiqueta-mapa"></div>
+        </div>
+        <article class="ficha-isla" aria-live="polite">
+          <div class="foto-isla" id="isla-foto"></div>
+          <div class="cuerpo">
+            <h3 id="isla-nombre"></h3>
+            <p id="isla-texto"></p>
+            <div class="pasos">
+              <button type="button" id="isla-ant" aria-label="Anterior / Previous">←</button>
+              <button type="button" id="isla-sig" aria-label="Siguiente / Next">→</button>
+              <span id="isla-cuenta"></span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="caminos" class="gutter">
+    <div class="col">
+      <div class="cabeza">
+        <span class="ceja"><span lang="es">Tu vida en el mar</span><span lang="en">Your life at sea</span></span>
+        <h2 class="titulo-sec oro-texto"><span lang="es">Elige tu camino</span><span lang="en">Choose your path</span></h2>
+      </div>
+      <div class="pestanas" role="tablist" id="pestanas"></div>
+      <div class="camino" id="camino">
+        <div class="bg" id="camino-bg"></div>
+        <div class="contenido" id="camino-contenido"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="que-hay" class="gutter">
+    <div class="col">
+      <div class="cabeza">
+        <span class="ceja"><span lang="es">El mod</span><span lang="en">The mod</span></span>
+        <h2 class="titulo-sec oro-texto"><span lang="es">Qué hay dentro</span><span lang="en">What's inside</span></h2>
+        <p class="entradilla" lang="es">Todo el mapa es nuevo y la historia va después de Wano, Egghead y el comienzo de Elbaph.</p>
+        <p class="entradilla" lang="en">The whole map is new, and the story is set after Wano, Egghead and the start of the Elbaph arc.</p>
+      </div>
+      <div class="bento">
+        <article class="caja foto-caja">
+          <img src="assets/batalla-gyojin.jpg" alt="" width="1600" height="900">
+          <div class="txt">
+            <h3><span lang="es">Frutas del Diablo y Haki</span><span lang="en">Devil Fruits and Haki</span></h3>
+            <p lang="es">Casi 100 frutas con sus efectos, los tres tipos de Haki y kairoseki. Despierta tu fruta desde el nivel 25. Y si caes al mar con una fruta en el cuerpo, te hundes.</p>
+            <p lang="en">Nearly 100 fruits with their own effects, the three kinds of Haki and seastone. Awaken your fruit from level 25. And if you fall into the sea with a fruit in you, you sink.</p>
+          </div>
+        </article>
+        <article class="caja lado">
+          <div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18c2 1.5 4 1.5 6 0s4-1.5 6 0 4 1.5 6 0"/><path d="M4 14 12 3l8 11Z"/><path d="M12 3v11"/></svg></div>
+          <h3><span lang="es">Batallas navales</span><span lang="en">Naval battles</span></h3>
+          <p lang="es">Sobre War Sails, con reglas de One Piece: gyojin en su elemento, fuego de frutas en las cubiertas y el tiempo de cada mar.</p>
+          <p lang="en">Built on War Sails with One Piece rules: fish-men in their element, fruit fire on the decks and each sea's weather.</p>
+        </article>
+        <article class="caja lado">
+          <div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div>
+          <h3><span lang="es">~200 personajes canon</span><span lang="en">~200 canon characters</span></h3>
+          <p lang="es">Con su cara, su ropa, su fruta, su Haki y su cartel. Las tripulaciones navegan juntas.</p>
+          <p lang="en">With their own faces, clothes, fruits, Haki and bounties. Crews sail together.</p>
+        </article>
+        <article class="caja">
+          <div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18H6z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></div>
+          <h3><span lang="es">Tu cartel de SE BUSCA</span><span lang="en">Your WANTED poster</span></h3>
+          <p lang="es">Sube con lo que haces y la Marina te pone apodo. Desde 30 millones, vienen a por ti.</p>
+          <p lang="en">It grows with what you do, and the Marines give you an epithet. From 30 million on, they come after you.</p>
+        </article>
+        <article class="caja">
+          <div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="m13 19 6-6M16 16l4 4M19 21l2-2"/></svg></div>
+          <h3><span lang="es">Estilos de lucha</span><span lang="en">Fighting styles</span></h3>
+          <p lang="es">Rokushiki, Santoryu, Pierna Negra, kárate gyojin, Okama Kenpo o Ryusoken, en su escuela.</p>
+          <p lang="en">Rokushiki, Santoryu, Black Leg, Fish-Man Karate, Okama Kenpo or Ryusoken, at their schools.</p>
+        </article>
+        <article class="caja">
+          <div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg></div>
+          <h3><span lang="es">Nakamas</span><span lang="en">Nakama</span></h3>
+          <p lang="es">Rayleigh, Vivi, Zeff, Kureha y más esperan en las tabernas. Lazos de tripulación, banquetes y sakazuki.</p>
+          <p lang="en">Rayleigh, Vivi, Zeff, Kureha and more wait in taverns. Crew bonds, feasts and sakazuki.</p>
+        </article>
+        <article class="caja ancha">
+          <div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5Z"/></svg></div>
+          <h3><span lang="es">Una historia que seguir</span><span lang="en">A story to follow</span></h3>
+          <p lang="es">Los Road Poneglyphs hasta Laugh Tale, misiones de personajes canon, Buster Calls, la Reverie, la Guerra de la Cumbre y un periódico.</p>
+          <p lang="en">The Road Poneglyphs to Laugh Tale, quests from canon characters, Buster Calls, the Reverie, the Summit War and a newspaper.</p>
+        </article>
+        <article class="caja ancha">
+          <div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5Z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          <h3><span lang="es">Tu origen y tu familia</span><span lang="en">Your origin and family</span></h3>
+          <p lang="es">Orígenes de One Piece al crear el personaje. Puedes nacer en la familia de Garp, de Barbablanca, de Big Mom, de los Kozuki o entre los gigantes.</p>
+          <p lang="en">One Piece origins in the character creator. Be born into Garp's, Whitebeard's or Big Mom's family, the Kozuki clan or among the giants.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="proxima" class="gutter">
+    <div class="col">
+      <div class="proxima">
+        <div>
+          <a class="pastilla viva" href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018?tab=files" target="_blank" rel="noopener"><span lang="es">Ya disponible</span><span lang="en">Out now</span></a>
+          <h2 class="titulo-sec oro-texto" style="margin-top:16px"><span lang="es">Novedades de la 0.9.4</span><span lang="en">New in 0.9.4</span></h2>
+          <div class="teclas" aria-hidden="true">
+            <div class="tecla">B<small lang="es">distancia</small><small lang="en">ranged</small></div>
+            <div class="tecla">N<small lang="es">área</small><small lang="en">area</small></div>
+            <div class="tecla">M<small lang="es">poder</small><small lang="en">power</small></div>
+          </div>
+          <p class="nota" lang="es" style="margin-top:34px">¿Ya tienes la 0.9.3? Baja solo el «0.9.4 update» en Nexus y descomprímelo encima del mod. Tus partidas siguen valiendo.</p>
+          <p class="nota" lang="en" style="margin-top:34px">Already on 0.9.3? Just grab the "0.9.4 update" on Nexus and unzip it over the mod. Your saves keep working.</p>
+        </div>
+        <ul class="lista-proxima">
+          <li><span class="ico">✦</span><span><span lang="es"><b>Tres técnicas por fruta y por estilo</b><span>Con modelos propios: cortes que vuelan, rayos del cielo, ondas, cúpulas y púas.</span></span><span lang="en"><b>Three techniques per fruit and style</b><span>With the mod's own models: flying slashes, lightning from the sky, waves, domes and spikes.</span></span></span></li>
+          <li><span class="ico">🌊</span><span><span lang="es"><b>Reyes Marinos salvajes</b><span>Batallas navales contra ellos en tres tamaños, y puedes salir a pescarlos.</span></span><span lang="en"><b>Wild Sea Kings</b><span>Naval battles against them in three sizes, and you can go fishing for them.</span></span></span></li>
+          <li><span class="ico">🍺</span><span><span lang="es"><b>Aspirantes a nakama</b><span>La gente de las tabernas, con su oficio, su mar y su sueño.</span></span><span lang="en"><b>Would-be nakama</b><span>Tavern folk with their own crew role, home sea and dream.</span></span></span></li>
+          <li><span class="ico">🧪</span><span><span lang="es"><b>Egghead, Lulusia y mapas del tesoro</b><span>Sucesos del canon en tus partidas nuevas, y tesoros que se cavan de verdad.</span></span><span lang="en"><b>Egghead, Lulusia and treasure maps</b><span>Canon events in your new games, and treasure you actually dig up.</span></span></span></li>
+          <li><span class="ico">⛵</span><span><span lang="es"><b>Barcos con diseño propio</b><span>En las batallas navales: 10 cascos en tres estilos, el tuyo, el de la Marina y el de los piratas.</span></span><span lang="en"><b>Ships with the mod's own designs</b><span>In naval battles: 10 hulls in three styles, yours, the Marines' and the pirates'.</span></span></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="noticias" class="gutter">
+    <div class="col">
+      <div class="cabeza">
+        <span class="ceja"><span lang="es">Diario de a bordo</span><span lang="en">Ship's log</span></span>
+        <h2 class="titulo-sec oro-texto"><span lang="es">Noticias</span><span lang="en">News</span></h2>
+        <p class="entradilla" lang="es">Todas las versiones de la beta, de la más nueva a la primera. Las partidas siguen valiendo de una a otra.</p>
+        <p class="entradilla" lang="en">Every beta release, newest first. Your saves carry over from one to the next.</p>
+      </div>
+      <div class="canales">
+        <a href="https://discord.gg/eHTTNDrh8d" target="_blank" rel="noopener">Discord <small><span lang="es">sale aquí primero</span><span lang="en">first to know</span></small></a>
+        <a href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018?tab=logs" target="_blank" rel="noopener">Nexus Mods <small><span lang="es">notas completas</span><span lang="en">full patch notes</span></small></a>
+        <a href="https://www.moddb.com/mods/one-piece-nuevo-mundo" target="_blank" rel="noopener">ModDB</a>
+      </div>
+      <ol class="cronica">
+        <li>
+          <time><span lang="es">10 nov</span><span lang="en">Nov 10</span></time>
+          <article class="nota-version">
+            <h3><b>0.9.4</b><span class="nombre-v"><span lang="es">«La isla del futuro»</span><span lang="en">"The Island of the Future"</span></span><span class="nueva"><span lang="es">La última</span><span lang="en">Latest</span></span></h3>
+            <p lang="es">Tres técnicas por fruta y por estilo (B, N y M) con modelos propios, Reyes Marinos salvajes, aspirantes a nakama en las tabernas, Lulusia y el incidente de Egghead, la bitácora del capitán, mapas del tesoro de verdad, barcos con diseño propio y un cartel que cuesta más subir.</p>
+            <p lang="en">Three techniques per fruit and per style (B, N and M) with the mod's own models, wild Sea Kings, would-be nakama in the taverns, Lulusia and the Egghead Incident, the Captain's Log, real treasure maps, ships with the mod's own designs and a bounty that is harder to raise.</p>
+          </article>
+        </li>
+        <li class="menor">
+          <time><span lang="es">4 nov</span><span lang="en">Nov 4</span></time>
+          <article class="nota-version">
+            <h3>0.9.3 · hotfix 1</h3>
+            <p lang="es">Arregla un cierre al hablar con algunos vagabundos, otro al despedir a ciertos compañeros y los retratos que se acumulaban en memoria en partidas largas. Ya va dentro de la 0.9.4.</p>
+            <p lang="en">Fixes a crash when talking to some tavern wanderers, another when dismissing certain companions, and portraits piling up in memory over long sessions. Already inside 0.9.4.</p>
+          </article>
+        </li>
+        <li>
+          <time><span lang="es">3 nov</span><span lang="en">Nov 3</span></time>
+          <article class="nota-version">
+            <h3><b>0.9.3</b><span class="nombre-v"><span lang="es">«Bajo su bandera»</span><span lang="en">"Under Their Flag"</span></span></h3>
+            <p lang="es">Las tripulaciones sin islas cobran tributo a las aldeas (y tú también puedes), domadores de Reyes Marinos por los mares, tropas propias para el Ejército Revolucionario, el Haki de armadura se ve en la batalla y un informe de fallos que se manda con un botón.</p>
+            <p lang="en">Crews without islands make villages pay tribute (and so can you), Sea King tamers roam the seas, the Revolutionary Army gets its own troops, Armament Haki shows in battle, and a bug report you can send with one button.</p>
+          </article>
+        </li>
+        <li>
+          <time><span lang="es">28 oct</span><span lang="en">Oct 28</span></time>
+          <article class="nota-version">
+            <h3><b>0.9.2</b><span class="nombre-v"><span lang="es">«Poderes despiertos»</span><span lang="en">"Awakened Powers"</span></span></h3>
+            <p lang="es">Las Frutas del Diablo y el Haki se usan con una tecla en mitad de la batalla, los estilos de lucha tienen su técnica, el Haki llega a su nivel más alto, algunas frutas despiertan y llegan 44 personajes nuevos y misiones de los arcos del canon.</p>
+            <p lang="en">Devil Fruits and Haki go on a key in the middle of battle, fighting styles get their own technique, Haki reaches its highest level, some fruits awaken, and 44 new characters arrive with quests from the canon arcs.</p>
+          </article>
+        </li>
+        <li class="menor">
+          <time><span lang="es">25 oct</span><span lang="en">Oct 25</span></time>
+          <article class="nota-version">
+            <h3>0.9.1 · hotfix 1</h3>
+            <p lang="es">Arregla un cierre raro tras muchos días de partida con muchos grupos en el mar, y el mismo tipo de cierre cuando una flota grande se mueve como ejército.</p>
+            <p lang="en">Fixes a rare crash after many in-game days with lots of parties at sea, and the same kind of crash when a big fleet moves as an army.</p>
+          </article>
+        </li>
+        <li>
+          <time><span lang="es">25 oct</span><span lang="en">Oct 25</span></time>
+          <article class="nota-version">
+            <h3><b>0.9.1</b><span class="nombre-v"><span lang="es">«Grand Line»</span><span lang="en">"Grand Line"</span></span></h3>
+            <p lang="es">Reyes Marinos en el Calm Belt, el Log Pose en Paradise, el Coup de Burst y el Soldier Dock de la Franky House, asaltos a la costa en 74 aldeas y sucesos en el mar.</p>
+            <p lang="en">Sea Kings in the Calm Belt, the Log Pose in Paradise, the Franky House's Coup de Burst and Soldier Dock, coastal raids on 74 villages, and events at sea.</p>
+          </article>
+        </li>
+        <li>
+          <time><span lang="es">21 oct</span><span lang="en">Oct 21</span></time>
+          <article class="nota-version">
+            <h3><b>0.9.0</b><span class="nombre-v"><span lang="es">«Cielo y Mar»</span><span lang="en">"Sky and Sea"</span></span></h3>
+            <p lang="es">La primera beta pública: Skypiea de punta a punta, la Isla Gyojin por fin bajo el mar y batallas navales con las reglas de One Piece.</p>
+            <p lang="en">The first public beta: Skypiea from end to end, Fish-Man Island finally under the sea, and naval battles with One Piece rules.</p>
+          </article>
+        </li>
+      </ol>
+      <p class="mas-notas" lang="es">Las notas completas de cada versión están en la pestaña <a href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018?tab=logs" target="_blank" rel="noopener">Changelog de Nexus</a> y en la carpeta del mod.</p>
+      <p class="mas-notas" lang="en">Full notes for every release are in the <a href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018?tab=logs" target="_blank" rel="noopener">Nexus Changelog tab</a> and in the mod folder.</p>
+    </div>
+  </section>
+
+  <section id="galeria" class="gutter">
+    <div class="col">
+      <div class="galeria-cabeza">
+        <div class="cabeza" style="margin:0">
+          <span class="ceja"><span lang="es">Capturas del juego</span><span lang="en">In-game screenshots</span></span>
+          <h2 class="titulo-sec oro-texto"><span lang="es">Galería</span><span lang="en">Gallery</span></h2>
+        </div>
+        <div class="flechas">
+          <button type="button" id="gal-ant" aria-label="Anterior / Previous">←</button>
+          <button type="button" id="gal-sig" aria-label="Siguiente / Next">→</button>
+        </div>
+      </div>
+      <div class="carrusel" id="carrusel"></div>
+    </div>
+  </section>
+
+  <dialog id="visor" aria-label="Captura">
+    <figure>
+      <img id="visor-img" src="" alt="">
+      <figcaption class="visor-pie">
+        <p id="visor-texto"></p>
+        <button type="button" id="visor-ant" aria-label="Anterior / Previous">←</button>
+        <button type="button" id="visor-sig" aria-label="Siguiente / Next">→</button>
+        <button type="button" id="visor-cerrar"><span lang="es">Cerrar</span><span lang="en">Close</span></button>
+      </figcaption>
+    </figure>
+  </dialog>
+
+  <section id="instalar" class="gutter">
+    <div class="col">
+      <div class="cabeza">
+        <span class="ceja"><span lang="es">Empieza a jugar</span><span lang="en">Start playing</span></span>
+        <h2 class="titulo-sec oro-texto"><span lang="es">Instalar</span><span lang="en">Install</span></h2>
+      </div>
+      <div class="pasos-instalar">
+        <div class="paso">
+          <h3><span lang="es">Descárgalo</span><span lang="en">Download it</span></h3>
+          <p lang="es">Baja el archivo principal en <a href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018" target="_blank" rel="noopener">Nexus Mods</a>.</p>
+          <p lang="en">Get the main file from <a href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018" target="_blank" rel="noopener">Nexus Mods</a>.</p>
+        </div>
+        <div class="paso">
+          <h3><span lang="es">Descomprímelo</span><span lang="en">Unzip it</span></h3>
+          <p lang="es">En <code>Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\</code>. Te queda <code>Modules\OPNuevoMundo</code>.</p>
+          <p lang="en">Into <code>Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\</code>. You end up with <code>Modules\OPNuevoMundo</code>.</p>
+        </div>
+        <div class="paso">
+          <h3><span lang="es">Zarpa</span><span lang="en">Set sail</span></h3>
+          <p lang="es">Actívalo en el lanzador del juego y empieza una partida.</p>
+          <p lang="en">Enable it in the game launcher and start a campaign.</p>
+        </div>
+      </div>
+      <div class="requisitos">
+        <span>Bannerlord 1.4.8</span>
+        <span lang="es">DLC War Sails</span><span lang="en">War Sails DLC</span>
+        <span lang="es">Partida nueva si vienes de antes de la 0.9</span><span lang="en">New campaign if coming from before 0.9</span>
+        <span lang="es">Compatible con RBM</span><span lang="en">Works with RBM</span>
+      </div>
+      <p class="nota" lang="es">No necesita otros mods: peinados, sombreros y ropa vienen dentro. Con Realistic Battle Mod, carga RBM y RBM_WS por encima. No es compatible con otras conversiones totales. Si Steam actualiza el juego, espera al parche del mod.</p>
+      <p class="nota" lang="en">No other mods needed: hairstyles, hats and clothes are built in. With Realistic Battle Mod, load RBM and RBM_WS above it. Not compatible with other total conversions. If Steam updates the game, wait for the mod's patch.</p>
+    </div>
+  </section>
+
+  <section id="apoyanos" class="gutter">
+    <div class="col">
+      <div class="cabeza">
+        <span class="ceja"><span lang="es">El mod es gratis</span><span lang="en">The mod is free</span></span>
+        <h2 class="titulo-sec oro-texto"><span lang="es">Apóyanos</span><span lang="en">Support us</span></h2>
+        <p class="entradilla" lang="es">Lo hacemos por gusto y seguirá siendo gratis. Si te gusta, así nos ayudas de verdad.</p>
+        <p class="entradilla" lang="en">We make it for fun and it will stay free. If you like it, this is how you really help.</p>
+      </div>
+      <div class="apoyo">
+        <article class="caja">
+          <div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10v11M15 5.9 14 10h5.8a2 2 0 0 1 2 2.3l-1.4 7A2 2 0 0 1 18.4 21H7V10l4-8a3 3 0 0 1 4 3.9Z"/></svg></div>
+          <h3><span lang="es">Recomiéndalo en Nexus</span><span lang="en">Endorse it on Nexus</span></h3>
+          <p lang="es">Pulsa «Endorse» en la página del mod: sube en las listas y lo encuentran más jugadores.</p>
+          <p lang="en">Hit "Endorse" on the mod page: it climbs the lists and more players find it.</p>
+        </article>
+        <article class="caja">
+          <div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg></div>
+          <h3><span lang="es">Cuéntanos los fallos</span><span lang="en">Report bugs</span></h3>
+          <p lang="es">En #bug-reports del Discord, con el archivo <code>op_depuracion.log</code>. Cada informe hace mejor el siguiente parche.</p>
+          <p lang="en">In #bug-reports on the Discord, with the <code>op_depuracion.log</code> file. Every report makes the next patch better.</p>
+        </article>
+        <article class="caja">
+          <div class="icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg></div>
+          <h3><span lang="es">Compártelo</span><span lang="en">Share it</span></h3>
+          <p lang="es">Una captura, un clip o un vídeo de tu partida es lo que más ayuda a que otros descubran el mod.</p>
+          <p lang="en">A screenshot, a clip or a video of your run is what helps others discover the mod the most.</p>
+        </article>
+      </div>
+      <div class="discord-banda">
+        <div>
+          <h3><span lang="es">Únete a la tripulación</span><span lang="en">Join the crew</span></h3>
+          <p lang="es">Ideas en #suggestions, ayuda en #help y canal en español. Ahí salen primero las novedades.</p>
+          <p lang="en">Ideas in #suggestions, help in #help, and a Spanish channel. News shows up there first.</p>
+        </div>
+        <a class="boton" href="https://discord.gg/eHTTNDrh8d" target="_blank" rel="noopener"><span lang="es">Entrar al Discord</span><span lang="en">Open Discord</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section id="preguntas" class="gutter">
+    <div class="col">
+      <div class="cabeza">
+        <h2 class="titulo-sec oro-texto"><span lang="es">Preguntas</span><span lang="en">FAQ</span></h2>
+      </div>
+      <div class="preguntas">
+        <details>
+          <summary><span lang="es">¿Mis partidas siguen valiendo cuando sale un parche?</span><span lang="en">Do my saves survive a patch?</span></summary>
+          <p lang="es">Sí, desde la 0.9 en adelante. Algunas novedades (como un suceso del mundo) solo aparecen en partidas nuevas, y cada parche lo avisa.</p>
+          <p lang="en">Yes, from 0.9 onwards. Some new things (like a world event) only show up in new campaigns, and each patch says so.</p>
+        </details>
+        <details>
+          <summary><span lang="es">¿En qué idiomas está?</span><span lang="en">Which languages does it support?</span></summary>
+          <p lang="es">Español e inglés completos. El mod sigue el idioma del juego.</p>
+          <p lang="en">Full English and Spanish. The mod follows the game's language.</p>
+        </details>
+        <details>
+          <summary><span lang="es">El juego se me cierra. ¿Qué hago?</span><span lang="en">The game crashes. What should I do?</span></summary>
+          <p lang="es">Escríbenos en #bug-reports del Discord y adjunta <code>Documentos\Mount and Blade II Bannerlord\op_depuracion.log</code>. Con eso solemos encontrar el fallo.</p>
+          <p lang="en">Post in #bug-reports on the Discord and attach <code>Documents\Mount and Blade II Bannerlord\op_depuracion.log</code>. That usually lets us find the bug.</p>
+        </details>
+        <details>
+          <summary><span lang="es">¿Está en Steam Workshop?</span><span lang="en">Is it on the Steam Workshop?</span></summary>
+          <p lang="es">Todavía no. De momento se descarga en Nexus Mods.</p>
+          <p lang="en">Not yet. For now, download it from Nexus Mods.</p>
+        </details>
+        <details>
+          <summary><span lang="es">¿Es un juego oficial de One Piece?</span><span lang="en">Is this an official One Piece game?</span></summary>
+          <p lang="es">No. Es un proyecto de fans, gratuito y sin ánimo de lucro, sin relación con los dueños de One Piece ni con TaleWorlds.</p>
+          <p lang="en">No. It's a free, non-commercial fan project, not affiliated with the owners of One Piece or with TaleWorlds.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="gutter">
+  <div class="col">
+    <div class="fila">
+      <img src="assets/logo.png" alt="" width="52" height="52">
+      <strong>One Piece: Nuevo Mundo</strong>
+      <a href="https://www.nexusmods.com/mountandblade2bannerlord/mods/14018" target="_blank" rel="noopener">Nexus Mods</a>
+      <a href="https://discord.gg/eHTTNDrh8d" target="_blank" rel="noopener">Discord</a>
+      <a href="https://www.moddb.com/mods/one-piece-nuevo-mundo" target="_blank" rel="noopener">ModDB</a>
+      <a href="#inicio"><span lang="es">Arriba ↑</span><span lang="en">Top ↑</span></a>
+    </div>
+    <p lang="es">One Piece © Eiichiro Oda / Shueisha / Toei Animation. Mount &amp; Blade II: Bannerlord y War Sails © TaleWorlds Entertainment. Proyecto de fans gratuito y sin ánimo de lucro, sin relación con ellos.</p>
+    <p lang="en">One Piece © Eiichiro Oda / Shueisha / Toei Animation. Mount &amp; Blade II: Bannerlord and War Sails © TaleWorlds Entertainment. A free, non-commercial fan project, not affiliated with or endorsed by them.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var raiz = document.documentElement;
+  var idioma = "es";
+  var reducido = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function t(o) { return o[idioma] || o.es; }
+
+  /* ---------- datos ---------- */
+  var islas = [
+    { n: { es: "Loguetown", en: "Loguetown" }, mar: "East Blue", x: 60.4, y: 6.7, f: null,
+      t: { es: "La ciudad donde empezó y acabó todo, a un paso de Reverse Mountain. Aquí empiezan muchas partidas.", en: "The town of the beginning and the end, a stone's throw from Reverse Mountain. Many campaigns start here." } },
+    { n: { es: "Reverse Mountain", en: "Reverse Mountain" }, mar: "Red Line", x: 50, y: 17.6, f: null,
+      t: { es: "La entrada al Grand Line: el mar sube por la montaña desde los cuatro Blues y baja al otro lado.", en: "The gateway to the Grand Line: the four Blues flow up the mountain and down the other side." } },
+    { n: { es: "Reino de Sakura (Drum)", en: "Sakura Kingdom (Drum)" }, mar: "Paradise", x: 69.4, y: 28.5, f: "sakura",
+      t: { es: "Invierno eterno y los mejores médicos del mundo. Kureha espera en su taberna.", en: "Eternal winter and the best doctors in the world. Kureha waits in its tavern." } },
+    { n: { es: "Alabasta", en: "Alabasta" }, mar: "Paradise", x: 80.5, y: 41.6, f: null,
+      t: { es: "El reino del desierto. La misión «El rastro de la princesa» te lleva hasta Vivi, en Alubarna.", en: "The desert kingdom. The quest \"The Princess's Trail\" leads you to Vivi in Alubarna." } },
+    { n: { es: "Jaya y Skypiea", en: "Jaya and Skypiea" }, mar: "Paradise", x: 81, y: 51.9, f: "skypiea",
+      t: { es: "Desde Jaya, la Corriente Ascendente te sube a Skypiea: la Puerta del Cielo, Isla Ángel, Upper Yard y Weatheria.", en: "From Jaya, the Knock Up Stream sends you up to Skypiea: Heaven's Gate, Angel Island, Upper Yard and Weatheria." } },
+    { n: { es: "Water 7", en: "Water 7" }, mar: "Paradise", x: 74.7, y: 66.6, f: "water7",
+      t: { es: "La ciudad de los carpinteros de barcos. Paulie y Kokoro esperan en sus tabernas.", en: "The city of shipwrights. Paulie and Kokoro wait in its taverns." } },
+    { n: { es: "Impel Down", en: "Impel Down" }, mar: "Calm Belt", x: 60.6, y: 71.9, f: "impel-down",
+      t: { es: "La gran prisión del Gobierno. Si acabas dentro, puedes fugarte; y si te atreves, asaltarla.", en: "The Government's great prison. If you end up inside you can break out, and if you dare, storm it." } },
+    { n: { es: "Archipiélago Sabaody", en: "Sabaody Archipelago" }, mar: "Paradise", x: 54, y: 84.4, f: "sabaody",
+      t: { es: "El último puerto de Paradise: subastas, cazarrecompensas y el revestimiento para bajar a la Isla Gyojin.", en: "Paradise's last port: auctions, bounty hunters and the coating to dive to Fish-Man Island." } },
+    { n: { es: "Mary Geoise", en: "Mary Geoise" }, mar: "Red Line", x: 50, y: 80.1, f: "mary-geoise",
+      t: { es: "La Tierra Santa, sobre la Red Line. Aquí se reúnen los reyes del mundo en la Reverie.", en: "The Holy Land, atop the Red Line. The world's kings gather here for the Reverie." } },
+    { n: { es: "Isla Gyojin", en: "Fish-Man Island" }, mar: "Red Line", x: 46.3, y: 86, f: "isla-gyojin",
+      t: { es: "A diez mil metros bajo el mar. Se llega con el barco revestido y es el paso al Nuevo Mundo.", en: "Ten thousand metres under the sea. You reach it with a coated ship, and it's the way into the New World." } },
+    { n: { es: "Dressrosa", en: "Dressrosa" }, mar: "Nuevo Mundo", x: 25.9, y: 71.2, f: "dressrosa",
+      t: { es: "El Coliseo de Dressrosa reparte una Fruta del Diablo en su torneo. Puedes entrar disfrazado, como «Lucy».", en: "The Corrida Colosseum hands out a Devil Fruit in its tournament. You can enter in disguise, as \"Lucy\"." } },
+    { n: { es: "Zou", en: "Zou" }, mar: "Nuevo Mundo", x: 16.6, y: 63.6, f: "zou",
+      t: { es: "El ducado de Mokomo, sobre el lomo de un elefante gigante. El hogar de los mink.", en: "The Mokomo Dukedom, on the back of a giant elephant. Home of the minks." } },
+    { n: { es: "Whole Cake", en: "Whole Cake" }, mar: "Nuevo Mundo", x: 19.7, y: 52.8, f: "whole-cake",
+      t: { es: "El territorio de Big Mom. Puedes nacer en su familia.", en: "Big Mom's territory. You can be born into her family." } },
+    { n: { es: "Wano", en: "Wano" }, mar: "Nuevo Mundo", x: 20.6, y: 37, f: "wano-torii",
+      t: { es: "El país cerrado de los samuráis: Kuri, la Capital de las Flores y Onigashima.", en: "The closed country of samurai: Kuri, the Flower Capital and Onigashima." } },
+    { n: { es: "Egghead", en: "Egghead" }, mar: "Nuevo Mundo", x: 30.3, y: 31.1, f: "egghead",
+      t: { es: "La isla del futuro de Vegapunk. Con la 0.9.4, el incidente pasa en tus partidas nuevas.", en: "Vegapunk's island of the future. With 0.9.4, the incident happens in your new games." } },
+    { n: { es: "Elbaph", en: "Elbaph" }, mar: "Nuevo Mundo", x: 30.8, y: 26.2, f: "elbaph",
+      t: { es: "La tierra de los gigantes, con gigantes a su tamaño real. Puedes nacer entre ellos.", en: "The land of giants, at their real size. You can be born among them." } },
+    { n: { es: "Reino de Lvneel", en: "Lvneel Kingdom" }, mar: "North Blue", x: 12, y: 18.4, f: "lvneel",
+      t: { es: "Un reino del North Blue. Los cuatro Blues también están enteros en el mapa.", en: "A North Blue kingdom. The four Blues are fully on the map too." } }
+  ];
+  var caminos = [
+    { id: "pirata", i: "🏴‍☠️", n: { es: "Pirata", en: "Pirate" }, f: "batalla-naval",
+      t: { es: "Ser libre en el mar y que tu cabeza valga cada vez más.", en: "Be free at sea, with a price on your head that keeps growing." },
+      l: { es: ["Pide sitio a Luffy, Shanks, Hancock, Buggy, Law, Kid, Barbanegra o Marco.", "Asciende de grumete a mano derecha, o monta tu propia tripulación y tu Gran Flota.", "Tu cartel sube con lo que haces y la Marina te pone apodo."],
+           en: ["Ask Luffy, Shanks, Hancock, Buggy, Law, Kid, Blackbeard or Marco for a place aboard.", "Rise from cabin boy to right hand, or found your own crew and Grand Fleet.", "Your bounty grows with what you do, and the Marines give you an epithet."] } },
+    { id: "marina", i: "⚓", n: { es: "Marina", en: "Marines" }, f: "batalla-marina",
+      t: { es: "La Justicia por bandera, de marinero a Almirante de Flota.", en: "Justice as your banner, from seaman to Fleet Admiral." },
+      l: { es: ["10 rangos con méritos por batallas, entregas y misiones.", "Sirve en la flota de Garp, Smoker, Fujitora, Kizaru o Ryokugyu.", "En Capitán, el abrigo de la Justicia; en Almirante, Pacifistas a tus órdenes."],
+           en: ["10 ranks with merits from battles, hand-ins and quests.", "Serve in the fleet of Garp, Smoker, Fujitora, Kizaru or Ryokugyu.", "At Captain, the Justice coat; at Admiral, Pacifistas at your command."] } },
+    { id: "revolucion", i: "🔥", n: { es: "Revolución", en: "Revolution" }, f: "tormenta",
+      t: { es: "Plantar cara al Gobierno Mundial desde las sombras.", en: "Stand up to the World Government from the shadows." },
+      l: { es: ["Pide sitio en el barco de Sabo o de Koala.", "Cada uno tiene su encargo de la semana.", "Aprende Ryusoken en Momoiro o Baltigo."],
+           en: ["Ask Sabo or Koala for a place on their ship.", "Each of them has weekly orders.", "Learn Ryusoken at Momoiro or Baltigo."] } },
+    { id: "cazador", i: "🎯", n: { es: "Cazarrecompensas", en: "Bounty hunter" }, f: "sabaody",
+      t: { es: "Sin reino ni superiores: cazas piratas y cobras.", en: "No kingdom, no superiors: you hunt pirates and get paid." },
+      l: { es: ["Sácate la licencia en la Oficina del Gobierno Mundial.", "Un 50 % más por cada pirata con cartel que entregues.", "La pierdes si tu propio cartel llega a 1 millón."],
+           en: ["Get your licence at the World Government Office.", "50% more for every pirate with a bounty you hand in.", "You lose it if your own bounty reaches 1 million."] } }
+  ];
+  var galeria = [
+    { f: "skypiea", t: { es: "Skypiea, sobre las nubes", en: "Skypiea, above the clouds" } },
+    { f: "isla-gyojin", t: { es: "La Isla Gyojin, bajo el mar", en: "Fish-Man Island, under the sea" } },
+    { f: "elbaph", t: { es: "Elbaph, la tierra de los gigantes", en: "Elbaph, the land of giants" } },
+    { f: "wano", t: { es: "Wano, con Luffy", en: "Wano, with Luffy" } },
+    { f: "sabaody", t: { es: "Sabaody, noria incluida", en: "Sabaody, Ferris wheel and all" } },
+    { f: "batalla-naval", t: { es: "Abordaje en alta mar", en: "Boarding on the high seas" } },
+    { f: "dressrosa", t: { es: "Batalla en las calles de Dressrosa", en: "Battle in the streets of Dressrosa" } },
+    { f: "egghead", t: { es: "Batalla en Egghead", en: "Battle on Egghead" } },
+    { f: "water7", t: { es: "Water 7", en: "Water 7" } },
+    { f: "whole-cake", t: { es: "Whole Cake, en Totto Land", en: "Whole Cake, Totto Land" } },
+    { f: "zou", t: { es: "Zou, el ducado de Mokomo", en: "Zou, the Mokomo Dukedom" } },
+    { f: "impel-down", t: { es: "Impel Down", en: "Impel Down" } },
+    { f: "tormenta", t: { es: "Tormenta en el Nuevo Mundo", en: "A storm in the New World" } },
+    { f: "grand-line", t: { es: "El mapa entero", en: "The whole map" } }
+  ];
+
+  /* ---------- idioma ---------- */
+  var alCambiar = [];
+  function poner(i) {
+    idioma = i === "en" ? "en" : "es";
+    raiz.setAttribute("data-lang", idioma);
+    raiz.setAttribute("lang", idioma);
+    document.title = idioma === "es" ? "One Piece: Nuevo Mundo · mod de Bannerlord" : "One Piece: Nuevo Mundo · Bannerlord mod";
+    document.getElementById("btn-es").setAttribute("aria-pressed", idioma === "es" ? "true" : "false");
+    document.getElementById("btn-en").setAttribute("aria-pressed", idioma === "en" ? "true" : "false");
+    alCambiar.forEach(function (f) { f(); });
+  }
+  document.querySelectorAll("[data-idioma]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      poner(b.getAttribute("data-idioma"));
+      try { localStorage.setItem("opnm-idioma", idioma); } catch (e) {}
+    });
+  });
+
+  /* ---------- barra ---------- */
+  var barra = document.getElementById("barra");
+  function barraScroll() { barra.classList.toggle("solida", window.scrollY > 40); }
+  window.addEventListener("scroll", barraScroll, { passive: true });
+  barraScroll();
+
+  /* ---------- mapa ---------- */
+  var mapa = document.getElementById("mapa");
+  var etiqueta = document.getElementById("etiqueta-mapa");
+  var botones = [];
+  var islaActual = 4;
+  islas.forEach(function (isla, i) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "punto";
+    b.style.left = isla.x + "%"; b.style.top = isla.y + "%";
+    b.addEventListener("click", function () { elegirIsla(i); });
+    b.addEventListener("mouseenter", function () { mostrarEtiqueta(i); });
+    b.addEventListener("focus", function () { mostrarEtiqueta(i); });
+    b.addEventListener("mouseleave", function () { etiqueta.classList.remove("ver"); });
+    b.addEventListener("blur", function () { etiqueta.classList.remove("ver"); });
+    mapa.appendChild(b); botones.push(b);
+  });
+  function mostrarEtiqueta(i) {
+    etiqueta.textContent = t(islas[i].n);
+    etiqueta.style.left = islas[i].x + "%"; etiqueta.style.top = islas[i].y + "%";
+    etiqueta.classList.add("ver");
+  }
+  function elegirIsla(i) {
+    islaActual = (i + islas.length) % islas.length;
+    var isla = islas[islaActual];
+    botones.forEach(function (b, k) { b.setAttribute("aria-pressed", k === islaActual ? "true" : "false"); b.setAttribute("aria-label", t(islas[k].n)); });
+    var foto = document.getElementById("isla-foto");
+    foto.innerHTML = (isla.f ? '<img src="assets/' + isla.f + '-p.jpg" alt="" width="800" height="450">' : '<div class="sin-foto">' + t(isla.n).charAt(0) + '</div>') + '<span class="mar-tag">' + isla.mar + '</span>';
+    document.getElementById("isla-nombre").textContent = t(isla.n);
+    document.getElementById("isla-texto").textContent = t(isla.t);
+    document.getElementById("isla-cuenta").textContent = (islaActual + 1) + " / " + islas.length;
+  }
+  document.getElementById("isla-ant").addEventListener("click", function () { elegirIsla(islaActual - 1); });
+  document.getElementById("isla-sig").addEventListener("click", function () { elegirIsla(islaActual + 1); });
+  alCambiar.push(function () { elegirIsla(islaActual); });
+
+  /* ---------- caminos ---------- */
+  var pestanas = document.getElementById("pestanas");
+  var caminoActual = 0;
+  caminos.forEach(function (c, i) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "pestana"; b.setAttribute("role", "tab"); b.id = "tab-" + c.id;
+    b.addEventListener("click", function () { elegirCamino(i); });
+    pestanas.appendChild(b);
+  });
+  function elegirCamino(i) {
+    caminoActual = i;
+    var c = caminos[i];
+    Array.prototype.forEach.call(pestanas.children, function (b, k) {
+      b.innerHTML = '<i aria-hidden="true">' + caminos[k].i + '</i>' + t(caminos[k].n);
+      b.setAttribute("aria-selected", k === i ? "true" : "false");
+    });
+    document.getElementById("camino-bg").style.backgroundImage = 'url("assets/' + c.f + '.jpg")';
+    var cont = document.getElementById("camino-contenido");
+    cont.innerHTML = '<h3 class="oro-texto">' + t(c.n) + '</h3><p style="font-size:19px;color:#e9eef6">' + t(c.t) + '</p><ul>' + t(c.l).map(function (x) { return "<li><span>" + x + "</span></li>"; }).join("") + "</ul>";
+    cont.classList.remove("anim"); void cont.offsetWidth; cont.classList.add("anim");
+  }
+  alCambiar.push(function () { elegirCamino(caminoActual); });
+
+  /* ---------- bento: brillo que sigue al ratón ---------- */
+  document.querySelectorAll(".caja").forEach(function (c) {
+    c.addEventListener("pointermove", function (e) {
+      var r = c.getBoundingClientRect();
+      c.style.setProperty("--mx", (e.clientX - r.left) + "px");
+      c.style.setProperty("--my", (e.clientY - r.top) + "px");
+    });
+  });
+
+  /* ---------- galería ---------- */
+  var carrusel = document.getElementById("carrusel");
+  var diapos = [];
+  galeria.forEach(function (g, i) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "diapo";
+    b.innerHTML = '<img src="assets/' + g.f + '-p.jpg" alt="" loading="lazy" width="800" height="450"><span></span>';
+    b.addEventListener("click", function () { abrir(i); });
+    carrusel.appendChild(b); diapos.push(b);
+  });
+  function pies() { diapos.forEach(function (b, i) { b.querySelector("span").textContent = t(galeria[i].t); b.setAttribute("aria-label", t(galeria[i].t)); }); }
+  alCambiar.push(pies);
+  function moverCarrusel(d) { carrusel.scrollBy({ left: d * (carrusel.clientWidth * .8), behavior: reducido ? "auto" : "smooth" }); }
+  document.getElementById("gal-ant").addEventListener("click", function () { moverCarrusel(-1); });
+  document.getElementById("gal-sig").addEventListener("click", function () { moverCarrusel(1); });
+  var visor = document.getElementById("visor"), vImg = document.getElementById("visor-img"), vTxt = document.getElementById("visor-texto"), vI = 0;
+  function verFoto(i) { vI = (i + galeria.length) % galeria.length; vImg.src = "assets/" + galeria[vI].f + ".jpg"; vTxt.textContent = t(galeria[vI].t); vImg.alt = vTxt.textContent; }
+  function abrir(i) { verFoto(i); if (typeof visor.showModal === "function") visor.showModal(); else visor.setAttribute("open", ""); }
+  document.getElementById("visor-ant").addEventListener("click", function () { verFoto(vI - 1); });
+  document.getElementById("visor-sig").addEventListener("click", function () { verFoto(vI + 1); });
+  document.getElementById("visor-cerrar").addEventListener("click", function () { visor.close ? visor.close() : visor.removeAttribute("open"); });
+  visor.addEventListener("click", function (e) { if (e.target === visor) visor.close(); });
+  visor.addEventListener("keydown", function (e) { if (e.key === "ArrowLeft") verFoto(vI - 1); if (e.key === "ArrowRight") verFoto(vI + 1); });
+
+  /* ---------- chispas de la portada ---------- */
+  var lienzo = document.getElementById("chispas");
+  if (lienzo && lienzo.getContext && !reducido) {
+    var ctx = lienzo.getContext("2d"), parts = [], W = 0, H = 0, activo = true;
+    function medir() { var r = lienzo.getBoundingClientRect(); var d = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height; lienzo.width = W * d; lienzo.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+    medir(); window.addEventListener("resize", medir);
+    for (var k = 0; k < 46; k++) parts.push({ x: Math.random(), y: Math.random(), r: Math.random() * 1.8 + .4, v: Math.random() * .00035 + .0001, a: Math.random() * 6.28 });
+    if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { activo = e[0].isIntersecting; }).observe(lienzo);
+    (function cuadro() {
+      if (activo && !document.hidden) {
+        ctx.clearRect(0, 0, W, H);
+        parts.forEach(function (p) {
+          p.y -= p.v; p.a += .02; if (p.y < -.02) { p.y = 1.02; p.x = Math.random(); }
+          var al = .35 + Math.sin(p.a) * .3;
+          ctx.beginPath(); ctx.arc(p.x * W + Math.sin(p.a) * 8, p.y * H, p.r, 0, 6.283);
+          ctx.fillStyle = "rgba(255, 220, 150," + al.toFixed(3) + ")"; ctx.fill();
+        });
+      }
+      requestAnimationFrame(cuadro);
+    })();
+  }
+
+  /* ---------- arranque ---------- */
+  var guardado = null;
+  try { guardado = localStorage.getItem("opnm-idioma"); } catch (e) {}
+  var nav = (navigator.language || "es").toLowerCase();
+  poner(guardado || (nav.indexOf("es") === 0 ? "es" : "en"));
+})();
+</script>
+</body>
+</html>
